@@ -1,0 +1,100 @@
+.screen {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.panel {
+    background-color: rgb(30, 32, 40);
+    border-radius: 16px;
+    padding: 40px 60px;
+    align-items: center;
+    min-width: 480px;
+}
+
+.title {
+    font-size: 72px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-bottom: 40px;
+}
+
+.subtitle {
+    font-size: 36px;
+    color: rgb(220, 220, 220);
+    -unity-text-align: middle-center;
+    margin-bottom: 24px;
+}
+
+.row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-button {
+    width: 320px;
+    height: 72px;
+    margin: 8px;
+    font-size: 32px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(70, 110, 200);
+    border-width: 0;
+    border-radius: 12px;
+}
+
+.menu-button:hover {
+    background-color: rgb(95, 135, 225);
+}
+
+.menu-button:active {
+    background-color: rgb(50, 85, 165);
+}
+
+.menu-button:disabled {
+    opacity: 0.4;
+}
+
+.arrow-button {
+    width: 80px;
+    height: 80px;
+    margin: 16px;
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(70, 110, 200);
+    border-width: 0;
+    border-radius: 40px;
+}
+
+.arrow-button:hover {
+    background-color: rgb(95, 135, 225);
+}
+
+.arrow-button:disabled {
+    opacity: 0.3;
+}
+
+.hud {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 24px 40px;
+}
+
+.hud-label {
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+}
