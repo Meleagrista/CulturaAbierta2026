@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement class="screen">
+        <ui:Label text="Game Template" class="title" />
+        <ui:Button name="start-button" text="Start" class="menu-button" />
+        <ui:Button name="quit-button" text="Quit" class="menu-button" />
+    </ui:VisualElement>
+</ui:UXML>
