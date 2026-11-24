@@ -7,6 +7,8 @@ public class RangeDetector : MonoBehaviour
     private SphereCollider detectionCollider;
     private List<UnitBehaviour> unitBehaviours;
 
+    private UnitBehaviour.Team currentTeam;
+
 
     void Awake()
     {
@@ -18,13 +20,13 @@ public class RangeDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        UnitBehaviour unit = other.GetComponent<UnitBehaviour>();
-        if(unit)
+        UnitBehaviour otherUnit = other.GetComponent<UnitBehaviour>();
+        if(otherUnit && otherUnit.GetTeam() != currentTeam)
         {
-            if (!unitBehaviours.Contains(unit))
+            if (!unitBehaviours.Contains(otherUnit))
             {
-                unitBehaviours.Add(unit);
-                unit.OnUnitRemoved += HandleUnitRemoved;
+                unitBehaviours.Add(otherUnit);
+                otherUnit.OnUnitRemoved += HandleUnitRemoved;
             }
         }
     }
@@ -71,5 +73,10 @@ public class RangeDetector : MonoBehaviour
     {
         unit.OnUnitRemoved -= HandleUnitRemoved;
         unitBehaviours.Remove(unit);
+    }
+
+    public void SetCurrentTeam(UnitBehaviour.Team NewTeam)
+    {
+        currentTeam = NewTeam;
     }
 }

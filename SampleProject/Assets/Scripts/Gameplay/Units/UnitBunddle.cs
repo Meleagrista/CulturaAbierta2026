@@ -6,6 +6,7 @@ public class UnitBunddle : MonoBehaviour
 
     [SerializeField] private GameObject UnitPrefab;
     [SerializeField] private int NumberOfUnits = 6;
+    [SerializeField] private UnitBehaviour.Team BunddleTeam;
 
     
     private List<GameObject> unitList;
@@ -38,8 +39,9 @@ public class UnitBunddle : MonoBehaviour
             UnitBehaviour unitbehaviour = unit.GetComponent<UnitBehaviour>();
             unitList.Add(unit);
 
-            unitbehaviour.Spawn(position);
+            unitbehaviour.Spawn(position, BunddleTeam);
             unitbehaviour.OnUnitRemoved += UnitDied;
+            unitbehaviour.transform.parent = this.transform;
         }
     }
 

@@ -11,6 +11,12 @@ public class UnitBehaviour : MonoBehaviour
         Attacking
     }
 
+    public enum Team
+    {
+        PlayerTeam,
+        EnemyTeam
+    }
+
     [SerializeField] private UnitDataSO Data;
 
     private string Name;
@@ -20,12 +26,15 @@ public class UnitBehaviour : MonoBehaviour
     private float Defense;
 
     private float AttackDamage;
+
     private float AttackRate;
 
     private float Range;
     private int Price;
 
     private float MovementSpeed;
+
+    private Team unitTeam;
 
     //Unit components
 
@@ -65,9 +74,7 @@ public class UnitBehaviour : MonoBehaviour
 
         rangeDetector.SetRange(Range);
 
-        targetPosition = transform.position;
-
-        Spawn(transform.position);
+        rangeDetector.SetCurrentTeam(unitTeam);
     }
     void Update()
     {
@@ -84,11 +91,13 @@ public class UnitBehaviour : MonoBehaviour
         }
     }
 
-    public void Spawn(Vector3 Position)
+    public void Spawn(Vector3 Position, Team UnitTeam)
     {
         currentHealt = MaxHealth;
 
         this.transform.position = Position;
+        unitTeam = UnitTeam;
+        targetPosition = transform.position;
     }
 
     public void Damage(float Damage)
@@ -145,5 +154,10 @@ public class UnitBehaviour : MonoBehaviour
     public void SetTargetPosition(Vector3 NewTargetPosition)
     {
         targetPosition = NewTargetPosition;
+    }
+
+    public Team GetTeam()
+    {
+        return unitTeam;
     }
 }
