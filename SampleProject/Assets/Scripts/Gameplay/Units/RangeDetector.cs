@@ -8,7 +8,7 @@ public class RangeDetector : MonoBehaviour
     private List<UnitBehaviour> unitBehaviours;
 
 
-    void Start()
+    void Awake()
     {
         detectionCollider = GetComponent<SphereCollider>();
         detectionCollider.isTrigger = true;
@@ -24,6 +24,7 @@ public class RangeDetector : MonoBehaviour
             if (!unitBehaviours.Contains(unit))
             {
                 unitBehaviours.Add(unit);
+                unit.OnUnitRemoved += HandleUnitRemoved;
             }
         }
     }
@@ -64,5 +65,11 @@ public class RangeDetector : MonoBehaviour
     public void SetRange(float Range)
     {
         detectionCollider.radius = Range;
+    }
+
+    private void HandleUnitRemoved(UnitBehaviour unit)
+    {
+        unit.OnUnitRemoved -= HandleUnitRemoved;
+        unitBehaviours.Remove(unit);
     }
 }

@@ -1,9 +1,10 @@
 using UnityEngine;
+using System;
 
 public class UnitBehaviour : MonoBehaviour
 {
 
-
+    public event Action<UnitBehaviour> OnUnitRemoved;
     public enum UnitState
     {
         Moving,
@@ -42,6 +43,10 @@ public class UnitBehaviour : MonoBehaviour
     //Variables for movement
     private Vector3 targetPosition;
 
+    private void OnDisable()
+    {
+        OnUnitRemoved?.Invoke(this);
+    }
 
     void Start()
     {
@@ -61,9 +66,9 @@ public class UnitBehaviour : MonoBehaviour
         rangeDetector.SetRange(Range);
 
         targetPosition = transform.position;
-    }
 
-    // Update is called once per frame
+        Spawn(transform.position);
+    }
     void Update()
     {
         if(currentState == UnitState.Moving)
@@ -109,14 +114,20 @@ public class UnitBehaviour : MonoBehaviour
         {
             currentTarget.Damage(AttackDamage);
         }
+        else
+        {
+            SetTarget(rangeDetector.GetCloserUnit());
+            if (currentTarget)
+            {
+                currentTarget.Damage(AttackDamage);
+            }
+        }
     }
 
     private void Die()
     {
-        Destroy(this);
+        Destroy(this.gameObject);
     }
-
-
 
     public void SetState(UnitState NewState)
     {
