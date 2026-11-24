@@ -16,8 +16,8 @@ MonoBehaviour:
   Description: El saeton es cocodilo mu bonico
   MaxHealth: 100
   Defense: 50
-  AttackDamage: 20
-  AttackRate: 2
+  AttackDamage: 50
+  AttackRate: 1
   Range: 5
   Price: 10
   MovementSpeed: 10
