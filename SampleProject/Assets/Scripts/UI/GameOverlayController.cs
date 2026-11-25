@@ -64,6 +64,5 @@ public class GameOverlayController : UIScreen
     private void OnGameEnded(Dictionary<string, object> message)
     {
         m_isTimerRunning = false;
-        GameStateSO.Instance.SaveCompletion(m_elapsedTime, m_moveCount);
     }
 }

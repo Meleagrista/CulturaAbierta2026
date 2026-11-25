@@ -26,10 +26,6 @@ public class GameManager : MonoBehaviour
     {
         string sceneName = (string)msg["sceneName"];
 
-        int index = LevelListSO.Instance.levels.FindIndex(e => e.sceneName == sceneName);
-        if (index >= 0)
-            GameStateSO.Instance.StartLevel(index);
-
         StartCoroutine(LoadScene(sceneName));
     }
 
