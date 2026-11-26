@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
   Name: Saeton
   Description: El saeton es cocodilo mu bonico
-  MaxHealth: 100
-  Defense: 50
-  AttackDamage: 50
+  MaxHealth: 180
+  Defense: 5
+  AttackDamage: 32
   AttackRate: 1
-  Range: 5
-  Price: 10
+  Range: 6
+  Price: 25
   MovementSpeed: 10
