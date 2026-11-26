@@ -113,3 +113,9 @@ InitTestScene*.unity*
 
 # Personal editor tool packages — each developer installs their own
 */Packages/com.merry-yellow*/
+
+# Configuración personal de VS Code
+.vscode/
+
+# Escenas de emergencia de Unity
+*/[Aa]ssets/_Recovery/
