@@ -13,11 +13,7 @@ MonoBehaviour:
   m_Name: LevelListSO
   m_EditorClassIdentifier: Assembly-CSharp::LevelListSO
   titleScene: Title
-  selectionScene: Selection
-  levels:
-  - sceneName: Level1
-    previewPrefab: {fileID: 0}
-  - sceneName: Level2
-    previewPrefab: {fileID: 0}
-  - sceneName: Level3
-    previewPrefab: {fileID: 0}
+  leftLevels:
+  - LevelLeft
+  rightLevels:
+  - LevelRight

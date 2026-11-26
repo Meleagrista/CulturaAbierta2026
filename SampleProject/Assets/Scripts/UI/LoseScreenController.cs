@@ -3,21 +3,16 @@ using UnityEngine.UIElements;
 
 public class LoseScreenController : UIScreen
 {
-    private Button m_retryButton;
     private Button m_menuButton;
 
     private void OnEnable()
     {
-        m_retryButton = Root.Q<Button>("retry-button");
         m_menuButton = Root.Q<Button>("menu-button");
-
-        m_retryButton.clicked += OnRetryClicked;
         m_menuButton.clicked += OnMenuClicked;
     }
 
     private void OnDisable()
     {
-        m_retryButton.clicked -= OnRetryClicked;
         m_menuButton.clicked -= OnMenuClicked;
     }
 
@@ -31,6 +26,5 @@ public class LoseScreenController : UIScreen
 
     private void OnGameLose(Dictionary<string, object> message) => Show();
 
-    private void OnRetryClicked() => LoadScene(GameStateSO.Instance.GetCurrentSceneName());
     private void OnMenuClicked() => LoadScene(LevelListSO.Instance.titleScene);
 }

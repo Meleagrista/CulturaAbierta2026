@@ -2,7 +2,6 @@
     <ui:VisualElement class="screen overlay">
         <ui:VisualElement class="panel">
             <ui:Label text="You fell!" class="title" />
-            <ui:Button name="retry-button" text="Retry" class="menu-button" />
             <ui:Button name="menu-button" text="Main menu" class="menu-button" />
         </ui:VisualElement>
     </ui:VisualElement>
