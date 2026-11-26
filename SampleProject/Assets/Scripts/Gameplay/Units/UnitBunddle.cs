@@ -1,18 +1,25 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+
 
 public class UnitBunddle : MonoBehaviour
 {
+    public event Action<UnitBunddle> OnBundleDied;
+    public event Action<UnitBehaviour> OnMemberDied;
+    public event Action<UnitBehaviour> OnMemberSpawned;
+
 
     [SerializeField] private int NumberOfUnits = 6;
     [SerializeField] private UnitBehaviour.Team BunddleTeam;
     [SerializeField] private UnitDataSO Data;
 
     private List<UnitBehaviour> unitList;
+    private Queue<UnitBehaviour> deadUnit;
 
     private GameObject UnitPrefab;
 
-    private float unitsLeft;
+    private int unitsLeft;
 
     private float bundleMaxHealth;
     private int Price;
@@ -65,7 +72,6 @@ public class UnitBunddle : MonoBehaviour
         unitList.Add(unitbehaviour);
 
         unitbehaviour.Spawn(position, BunddleTeam, Data, this);
-        unitbehaviour.transform.parent = this.transform;
 
         unitsLeft++;
     }
@@ -76,7 +82,7 @@ public class UnitBunddle : MonoBehaviour
 
         while (unitsLeft > 0)
         {
-            float currentPercentage = (unitsLeft - 1) / (float)NumberOfUnits;
+            float currentPercentage = ((float)unitsLeft - 1) / (float)NumberOfUnits;
 
             if (currentHealth <= bundleMaxHealth * currentPercentage)
             {
@@ -125,14 +131,30 @@ public class UnitBunddle : MonoBehaviour
         }
         unitList.Remove(maxHitsUnit);
         unitsLeft--;
-        Destroy(maxHitsUnit.gameObject);
+        deadUnit.Enqueue(maxHitsUnit);
+        maxHitsUnit.gameObject.SetActive(false);
     }
 
     private void RespawnUnit(Vector3 position)
     {
-        SpawnUnit(position);
+        UnitBehaviour unit = deadUnit.Dequeue();
+        unit.gameObject.SetActive(true);
+        unit.Respawn(position);
     }
 
+    public UnitBehaviour.Team GetTeam()
+    {
+        return BunddleTeam;
+    }
 
+    public List<UnitBehaviour> GetUnitList()
+    {
+        return unitList;
+    }
+
+    public bool IsAlive()
+    {
+        return currentHealth > 0;
+    }
 
 }

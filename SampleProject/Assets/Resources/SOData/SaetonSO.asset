@@ -22,3 +22,5 @@ MonoBehaviour:
   Price: 25
   MovementSpeed: 10
   prefab: {fileID: 3869189465404126749, guid: 2c9fde0f97282944b8674a59e3c22b57, type: 3}
+  Is2x2: 0
+  MatrixForma: []

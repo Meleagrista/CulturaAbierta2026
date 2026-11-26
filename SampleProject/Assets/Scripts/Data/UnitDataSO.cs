@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "UnitData", menuName ="Game Data/ Unit Data")]
 public class UnitDataSO : ScriptableObject
@@ -20,4 +21,8 @@ public class UnitDataSO : ScriptableObject
     public float MovementSpeed;
 
     public GameObject prefab;
+
+    public bool Is2x2;
+
+    public List<Vector2> PositionList;
 }

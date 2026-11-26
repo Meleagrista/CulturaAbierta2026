@@ -1,10 +1,11 @@
 using UnityEngine;
 using System;
+using UnityEngine.AI;
 
+
+[RequireComponent(typeof(NavMeshAgent))]
 public class UnitBehaviour : MonoBehaviour
 {
-
-    public event Action<UnitBehaviour> OnUnitRemoved;
     public enum UnitState
     {
         Moving,
@@ -33,13 +34,9 @@ public class UnitBehaviour : MonoBehaviour
 
     public int timesAttacked = 0;
 
-    //Unit components
-
-    private Rigidbody unitRB;
-    private RangeDetector rangeDetector;
-
     //Current player sate varibles
     public UnitState currentState;
+    private NavMeshAgent agentComponent;
 
     //Variables for attacking
     private float timeOfLastAttack;
@@ -50,21 +47,9 @@ public class UnitBehaviour : MonoBehaviour
 
     private UnitBunddle bundle;
 
-    private void OnDisable()
+    void Awake()
     {
-        OnUnitRemoved?.Invoke(this);
-    }
-
-    void Start()
-    {
-        unitRB = GetComponent<Rigidbody>();
-        rangeDetector = GetComponentInChildren<RangeDetector>();
-
-        rangeDetector.SetRange(Range);
-
-        rangeDetector.SetCurrentTeam(unitTeam);
-
-        currentState = UnitState.Idle;
+        agentComponent = GetComponent<NavMeshAgent>();
     }
     void Update()
     {
@@ -85,7 +70,6 @@ public class UnitBehaviour : MonoBehaviour
     {
         this.bundle = Bundle;
 
-
         Name = Data.Name;
         Description = Data.Description;
         AttackDamage = bundle.GetPercentDamage();
@@ -96,6 +80,13 @@ public class UnitBehaviour : MonoBehaviour
         this.transform.position = Position;
         unitTeam = UnitTeam;
         targetPosition = transform.position;
+
+        currentState = UnitState.Idle;
+    }
+
+    public void Respawn(Vector3 Position)
+    {
+        agentComponent.Warp(Position);
     }
 
     public void Damage(float Damage)
@@ -117,36 +108,30 @@ public class UnitBehaviour : MonoBehaviour
         {
             currentTarget.Damage(AttackDamage);
         }
-        else
-        {
-            SetTarget(rangeDetector.GetCloserUnit());
-            if (currentTarget)
-            {
-                currentTarget.Damage(AttackDamage);
-            }
-        }
     }
 
     public void SetState(UnitState NewState)
     {
         currentState = NewState;
-
-        if (NewState == UnitState.Attacking)
-        {
-            if (currentTarget == null)
-            {
-                SetTarget(rangeDetector.GetCloserUnit());
-            }
-        }
     }
 
     public void SetTargetPosition(Vector3 NewTargetPosition)
     {
-        targetPosition = NewTargetPosition;
+        agentComponent.SetDestination(NewTargetPosition);
     }
 
     public Team GetTeam()
     {
         return unitTeam;
+    }
+
+    public float GetRange()
+    {
+        return Range;
+    }
+
+    public UnitBunddle GetBundle()
+    {
+        return bundle;
     }
 }
