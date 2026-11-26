@@ -8,7 +8,8 @@ public class UnitBehaviour : MonoBehaviour
     public enum UnitState
     {
         Moving,
-        Attacking
+        Attacking,
+        Idle
     }
 
     public enum Team
@@ -17,24 +18,20 @@ public class UnitBehaviour : MonoBehaviour
         EnemyTeam
     }
 
-    [SerializeField] private UnitDataSO Data;
-
     private string Name;
     private string Description;
-
-    private float MaxHealth;
-    private float Defense;
 
     private float AttackDamage;
 
     private float AttackRate;
 
     private float Range;
-    private int Price;
 
     private float MovementSpeed;
 
     private Team unitTeam;
+
+    public int timesAttacked = 0;
 
     //Unit components
 
@@ -42,7 +39,6 @@ public class UnitBehaviour : MonoBehaviour
     private RangeDetector rangeDetector;
 
     //Current player sate varibles
-    private float currentHealt;
     public UnitState currentState;
 
     //Variables for attacking
@@ -52,6 +48,8 @@ public class UnitBehaviour : MonoBehaviour
     //Variables for movement
     private Vector3 targetPosition;
 
+    private UnitBunddle bundle;
+
     private void OnDisable()
     {
         OnUnitRemoved?.Invoke(this);
@@ -59,41 +57,41 @@ public class UnitBehaviour : MonoBehaviour
 
     void Start()
     {
-        Name = Data.Name;
-        Description = Data.Description;
-        MaxHealth = Data.MaxHealth;
-        AttackDamage = Data.AttackDamage;
-        AttackRate = Data.AttackRate;
-        Range = Data.Range;
-        Price = Data.Price;
-        MovementSpeed = Data.MovementSpeed;
-        Defense = Data.Defense;
-
         unitRB = GetComponent<Rigidbody>();
         rangeDetector = GetComponentInChildren<RangeDetector>();
 
         rangeDetector.SetRange(Range);
 
         rangeDetector.SetCurrentTeam(unitTeam);
+
+        currentState = UnitState.Idle;
     }
     void Update()
     {
-        if(currentState == UnitState.Moving)
+        if (currentState == UnitState.Moving)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, MovementSpeed * Time.deltaTime);
         }
-        if(currentState == UnitState.Attacking)
+        if (currentState == UnitState.Attacking)
         {
-            if(Time.time - timeOfLastAttack >= AttackRate)
+            if (Time.time - timeOfLastAttack >= AttackRate)
             {
                 Attack();
             }
         }
     }
 
-    public void Spawn(Vector3 Position, Team UnitTeam)
+    public void Spawn(Vector3 Position, Team UnitTeam, UnitDataSO Data, UnitBunddle Bundle)
     {
-        currentHealt = MaxHealth;
+        this.bundle = Bundle;
+
+
+        Name = Data.Name;
+        Description = Data.Description;
+        AttackDamage = bundle.GetPercentDamage();
+        AttackRate = Data.AttackRate;
+        Range = Data.Range;
+        MovementSpeed = Data.MovementSpeed;
 
         this.transform.position = Position;
         unitTeam = UnitTeam;
@@ -102,12 +100,8 @@ public class UnitBehaviour : MonoBehaviour
 
     public void Damage(float Damage)
     {
-        currentHealt -= Damage;
-
-        if(currentHealt <= 0)
-        {
-            Die();
-        }
+        timesAttacked++;
+        bundle.Hit(Damage);
     }
 
     public void SetTarget(UnitBehaviour target)
@@ -133,18 +127,13 @@ public class UnitBehaviour : MonoBehaviour
         }
     }
 
-    private void Die()
-    {
-        Destroy(this.gameObject);
-    }
-
     public void SetState(UnitState NewState)
     {
         currentState = NewState;
 
-        if(NewState == UnitState.Attacking)
+        if (NewState == UnitState.Attacking)
         {
-            if(currentTarget == null)
+            if (currentTarget == null)
             {
                 SetTarget(rangeDetector.GetCloserUnit());
             }

@@ -4,19 +4,33 @@ using System.Collections.Generic;
 public class UnitBunddle : MonoBehaviour
 {
 
-    [SerializeField] private GameObject UnitPrefab;
     [SerializeField] private int NumberOfUnits = 6;
     [SerializeField] private UnitBehaviour.Team BunddleTeam;
+    [SerializeField] private UnitDataSO Data;
 
-    
-    private List<GameObject> unitList;
+    private List<UnitBehaviour> unitList;
 
-    private int unitsLeft;
+    private GameObject UnitPrefab;
+
+    private float unitsLeft;
+
+    private float bundleMaxHealth;
+    private int Price;
+    private float Defense;
+    private float Damage;
+
+    private float currentHealth;
 
     private void Start()
     {
-        unitsLeft = NumberOfUnits;
-        unitList = new List<GameObject>();
+        unitList = new List<UnitBehaviour>();
+        bundleMaxHealth = Data.MaxHealth;
+        Price = Data.Price;
+        Defense = Data.Defense;
+        UnitPrefab = Data.prefab;
+        Damage = Data.AttackDamage;
+
+        currentHealth = bundleMaxHealth;
 
         // --- PRUEBA DE SPAWN EN FILA ---
         List<Vector3> testPositions = new List<Vector3>();
@@ -31,25 +45,94 @@ public class UnitBunddle : MonoBehaviour
         SpawnUnits(testPositions);
     }
 
+    public float GetPercentDamage()
+    {
+        return Damage / NumberOfUnits;
+    }
+
     public void SpawnUnits(List<Vector3> UnitPositions)
     {
-        foreach(Vector3 position in UnitPositions)
+        foreach (Vector3 position in UnitPositions)
         {
-            GameObject unit = Instantiate(UnitPrefab, position, Quaternion.identity);
-            UnitBehaviour unitbehaviour = unit.GetComponent<UnitBehaviour>();
-            unitList.Add(unit);
-
-            unitbehaviour.Spawn(position, BunddleTeam);
-            unitbehaviour.OnUnitRemoved += UnitDied;
-            unitbehaviour.transform.parent = this.transform;
+            SpawnUnit(position);
         }
     }
 
-    private void UnitDied(UnitBehaviour unit)
+    private void SpawnUnit(Vector3 position)
     {
-        unit.OnUnitRemoved -= UnitDied;
-        unitList.Remove(unit.gameObject);
-        unitsLeft--;
+        GameObject unit = Instantiate(UnitPrefab, position, Quaternion.identity);
+        UnitBehaviour unitbehaviour = unit.GetComponent<UnitBehaviour>();
+        unitList.Add(unitbehaviour);
+
+        unitbehaviour.Spawn(position, BunddleTeam, Data, this);
+        unitbehaviour.transform.parent = this.transform;
+
+        unitsLeft++;
     }
+
+    public void Hit(float damage)
+    {
+        currentHealth -= (damage * 100) / (100 + Defense);
+
+        while (unitsLeft > 0)
+        {
+            float currentPercentage = (unitsLeft - 1) / (float)NumberOfUnits;
+
+            if (currentHealth <= bundleMaxHealth * currentPercentage)
+            {
+                RemoveUnit();
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    public void Heal(float healing)
+    {
+        currentHealth += healing;
+
+        while (unitsLeft < NumberOfUnits)
+        {
+            float currentPercentage = (unitsLeft) / (float)NumberOfUnits;
+
+            if (currentHealth >= bundleMaxHealth * currentPercentage)
+            {
+                RespawnUnit(transform.position);
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    private void RemoveUnit()
+    {
+        int maxHits = int.MinValue;
+        UnitBehaviour maxHitsUnit = null;
+
+        foreach (UnitBehaviour unit in unitList)
+        {
+            int hits = unit.timesAttacked;
+
+            if (hits > maxHits)
+            {
+                maxHits = hits;
+                maxHitsUnit = unit;
+            }
+        }
+        unitList.Remove(maxHitsUnit);
+        unitsLeft--;
+        Destroy(maxHitsUnit.gameObject);
+    }
+
+    private void RespawnUnit(Vector3 position)
+    {
+        SpawnUnit(position);
+    }
+
+
 
 }

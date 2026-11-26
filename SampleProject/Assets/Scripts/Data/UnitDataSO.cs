@@ -18,4 +18,6 @@ public class UnitDataSO : ScriptableObject
     public int Price;
 
     public float MovementSpeed;
+
+    public GameObject prefab;
 }
