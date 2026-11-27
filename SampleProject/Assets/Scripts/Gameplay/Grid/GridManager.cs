@@ -22,6 +22,7 @@ public class GridBundle
 {
     public UnitDataSO data;
     public Vector2Int origin;
+    public int paid;
     public List<GridUnit> units = new List<GridUnit>();
 }
 
@@ -41,6 +42,15 @@ public class GridManager : MonoBehaviour
     public int rows = 6;
     public float cellSize = 1f;
 
+    [Header("Team")]
+    [Tooltip("Enemy grid: only spawns its presets, the player can't place or remove anything and the grid mesh is hidden.")]
+    public bool isEnemy;
+
+    [Header("Money")]
+    [Tooltip("Used when the current scene isn't in LevelListSO.")]
+    public int fallbackStartingMoney = 15;
+    [SerializeField] int money;
+
     [Header("Preset units")]
     public List<AutomaticGridBundle> presetUnits = new List<AutomaticGridBundle>();
 
@@ -51,11 +61,25 @@ public class GridManager : MonoBehaviour
 
     public IReadOnlyList<GridBundle> PlacedUnits => placedUnits;
 
+    public int Money => money;
+    public event Action<int> OnMoneyChanged;
+
     void Awake()
     {
         _cells = new GridUnit[cols, rows];
         placedUnits.Clear();
+
+        var level = LevelListSO.Instance.Find(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        SetMoney(isEnemy ? 0 : level?.startingMoney ?? fallbackStartingMoney);
     }
+
+    void SetMoney(int value)
+    {
+        money = value;
+        OnMoneyChanged?.Invoke(money);
+    }
+
+    public bool CanAfford(UnitDataSO unit) => unit != null && unit.Price <= money;
 
     void Start()
     {
@@ -66,7 +90,7 @@ public class GridManager : MonoBehaviour
                 continue;
             }
 
-            if (!TryPlace(preset.data, preset.origin))
+            if (!Place(preset.data, preset.origin, 0))
             {
                 Debug.LogWarning($"Could not place '{preset.data.name}' at {preset.origin}.", this);
             }
@@ -93,14 +117,27 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
-    public bool TryPlace(UnitDataSO unit, Vector2Int origin)
+    /// <summary>Player placement: costs the unit's Price.</summary>
+    public bool TryBuy(UnitDataSO unit, Vector2Int origin)
+    {
+        if (isEnemy || !CanAfford(unit) || !Place(unit, origin, unit.Price))
+        {
+            return false;
+        }
+
+        SetMoney(money - unit.Price);
+        return true;
+    }
+
+    /// <summary>Places a bundle without touching money (presets, scripted spawns).</summary>
+    public bool Place(UnitDataSO unit, Vector2Int origin, int paid = 0)
     {
         if (!CanPlace(unit, origin))
         {
             return false;
         }
 
-        var placed = new GridBundle { data = unit, origin = origin };
+        var placed = new GridBundle { data = unit, origin = origin, paid = paid };
 
         foreach (var cells in GroupFootprint(unit, origin))
         {
@@ -199,6 +236,12 @@ public class GridManager : MonoBehaviour
         }
 
         placedUnits.Remove(placed);
+
+        // Refunds what was paid (presets were free, so they give nothing back).
+        if (placed.paid > 0)
+        {
+            SetMoney(money + placed.paid);
+        }
     }
 
     /// <summary>The unit standing on this tile.</summary>

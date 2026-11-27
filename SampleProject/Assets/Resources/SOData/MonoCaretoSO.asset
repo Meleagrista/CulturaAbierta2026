@@ -21,6 +21,9 @@ MonoBehaviour:
   Range: 1
   Price: 20
   MovementSpeed: 10
+  cardSprite: {fileID: 21300000, guid: 7191836ad2b86654a80bbe5698ecf11e, type: 3}
+  hoverSprite: {fileID: 21300000, guid: 9b35e0633ee938e4e85c412558b6c535, type: 3}
+  formationSprite: {fileID: 21300000, guid: b544099f56a27a042a4c3af355b1a02e, type: 3}
   prefab: {fileID: 6991924251618387928, guid: 6fb78033f4894e59831e361a593edbbf, type: 3}
   Is2x2: 0
   footprint:

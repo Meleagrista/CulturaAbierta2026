@@ -12,8 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 923ea7664bab86042ab7434f1fe40b40, type: 3}
   m_Name: LevelListSO
   m_EditorClassIdentifier: Assembly-CSharp::LevelListSO
-  titleScene: Title
-  leftLevels:
-  - LevelLeft
-  rightLevels:
-  - LevelRight
+  titleScene: TeamSelection
+  leftTiers:
+  - name: Easy
+    levels:
+    - sceneName: LevelAndalucia
+      startingMoney: 210
+  - name: Medium
+    levels:
+    - sceneName: LevelAndalucia
+      startingMoney: 15
+  - name: Hard
+    levels:
+    - sceneName: LevelAndalucia
+      startingMoney: 15
+  rightTiers:
+  - name: Easy
+    levels:
+    - sceneName: LevelMancha
+      startingMoney: 200
+  - name: Medium
+    levels:
+    - sceneName: LevelMancha
+      startingMoney: 15
+  - name: Hard
+    levels:
+    - sceneName: LevelMancha
+      startingMoney: 15

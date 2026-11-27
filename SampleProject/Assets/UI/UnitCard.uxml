@@ -1,0 +1,24 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/BattleHUD.uss?fileID=7433441132597879392&amp;guid=daa983b9defa42f598af18e4e2e85564&amp;type=3#BattleHUD"/>
+    <ui:VisualElement name="card" class="unit-card">
+        <ui:VisualElement picking-mode="Ignore" class="unit-card__price">
+            <ui:Label name="price-label" text="3" picking-mode="Ignore" class="unit-card__price-label"/>
+            <ui:VisualElement picking-mode="Ignore" class="icon icon--coin"/>
+        </ui:VisualElement>
+        <ui:VisualElement picking-mode="Ignore" class="unit-card__stats">
+            <ui:VisualElement picking-mode="Ignore" class="unit-card__stat">
+                <ui:VisualElement picking-mode="Ignore" class="icon icon--attack"/>
+                <ui:Label name="attack-label" text="10" picking-mode="Ignore" class="unit-card__stat-label"/>
+            </ui:VisualElement>
+            <ui:VisualElement picking-mode="Ignore" class="unit-card__stat">
+                <ui:VisualElement picking-mode="Ignore" class="icon icon--defense"/>
+                <ui:Label name="defense-label" text="10" picking-mode="Ignore" class="unit-card__stat-label"/>
+            </ui:VisualElement>
+            <ui:VisualElement picking-mode="Ignore" class="unit-card__stat">
+                <ui:VisualElement picking-mode="Ignore" class="icon icon--health"/>
+                <ui:Label name="health-label" text="167" picking-mode="Ignore" class="unit-card__stat-label"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label name="name-label" text="NAME" picking-mode="Ignore" class="unit-card__name"/>
+    </ui:VisualElement>
+</ui:UXML>

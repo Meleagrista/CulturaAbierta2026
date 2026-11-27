@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,27 @@ public class GridMesh : MonoBehaviour
     public Color gridLineColor = new Color(1f, 1f, 1f, 0.35f);
 
     static Material _mat;
+
+    bool _fightStarted;
+
+    void Start()
+    {
+        if (grid != null && grid.isEnemy)
+        {
+            enabled = false;
+            return;
+        }
+
+        EventManager.StartListening(Event.FIGHT_STARTED_EVENT, OnFightStarted);
+    }
+
+    void OnDestroy() => EventManager.StopListening(Event.FIGHT_STARTED_EVENT, OnFightStarted);
+
+    void OnFightStarted(Dictionary<string, object> message)
+    {
+        _fightStarted = true;
+        _hasHit = false;
+    }
 
     void OnEnable()
     {
@@ -74,7 +96,7 @@ public class GridMesh : MonoBehaviour
 
     void DrawHoverPreview()
     {
-        bool canPlace = grid.CanPlace(selectedUnit, _hoverCell);
+        bool canPlace = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
         Color fill   = canPlace ? new Color(0f, 1f, 0f, 0.25f) : new Color(1f, 0f, 0f, 0.25f);
         Color border = canPlace ? new Color(0f, 1f, 0f, 0.9f)  : new Color(1f, 0f, 0f, 0.9f);
 
@@ -115,6 +137,13 @@ public class GridMesh : MonoBehaviour
     void Update()
     {
         Vector2 mousePos = Mouse.current.position.ReadValue();
+
+        if (_fightStarted || BattleHUDController.IsPointerOverHUD(mousePos))
+        {
+            _hasHit = false;
+            return;
+        }
+
         _hasHit = Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out RaycastHit hit, 100f, groundLayer);
 
         if (!_hasHit)
@@ -126,7 +155,7 @@ public class GridMesh : MonoBehaviour
 
         if (Mouse.current.leftButton.wasPressedThisFrame && selectedUnit != null)
         {
-            grid.TryPlace(selectedUnit, _hoverCell);
+            grid.TryBuy(selectedUnit, _hoverCell);
         }
 
         if (Mouse.current.rightButton.wasPressedThisFrame)

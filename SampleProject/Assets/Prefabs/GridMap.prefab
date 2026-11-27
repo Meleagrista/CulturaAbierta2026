@@ -41,6 +41,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3697511849874106845}
     m_Modifications:
+    - target: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: isEnemy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: presetUnits.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: presetUnits.Array.data[0].data
+      value: 
+      objectReference: {fileID: 11400000, guid: 77b97051c86359d4391615a5b1139c15, type: 2}
+    - target: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: presetUnits.Array.data[1].data
+      value: 
+      objectReference: {fileID: 11400000, guid: ed389dfcc0423cd4fab236b98e2cf40c, type: 2}
+    - target: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: presetUnits.Array.data[1].origin.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: presetUnits.Array.data[1].origin.y
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4580448252846154103, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1

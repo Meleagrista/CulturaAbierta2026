@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/BattleHUD.uss?fileID=7433441132597879392&amp;guid=daa983b9defa42f598af18e4e2e85564&amp;type=3#BattleHUD"/>
+    <ui:VisualElement name="battle-hud" picking-mode="Ignore" class="battle-hud">
+        <ui:VisualElement name="money" picking-mode="Ignore" class="money">
+            <ui:Label name="money-label" text="15" picking-mode="Ignore" class="money-label"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="card-row" picking-mode="Ignore" class="card-row"/>
+        <ui:Button name="fight-button" text="" class="fight-button"/>
+        <ui:VisualElement name="tooltip" picking-mode="Ignore" enabled="true" class="tooltip" style="display: none; visibility: hidden;">
+            <ui:VisualElement picking-mode="Ignore" class="tooltip__text">
+                <ui:Label name="tooltip-name" text="Name" picking-mode="Ignore" class="tooltip__name"/>
+                <ui:VisualElement name="tooltip-formation" picking-mode="Ignore" class="tooltip__formation"/>
+                <ui:Label name="tooltip-description" text="Description" picking-mode="Ignore" class="tooltip__description"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,222 @@
+.battle-hud {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    -unity-font-definition: url("project://database/Assets/UI/Fonts/DarumadropOne.ttf?fileID=12800000&guid=6f2ddf5eaea5f994ab6f21341080f529&type=3#DarumadropOne");
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 2px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}
+
+.icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.icon--coin {
+    background-image: url("project://database/Assets/UI/Sprites/MonedaPNG.png?fileID=21300000&guid=1bc48dc6b9058bb47bd137cee2baf9bb&type=3#MonedaPNG");
+}
+
+.icon--attack {
+    background-image: url("project://database/Assets/UI/Sprites/EspadaPNG.png?fileID=21300000&guid=95bd3ab483279e940aa6f4e07675256b&type=3#EspadaPNG");
+}
+
+.icon--defense {
+    background-image: url("project://database/Assets/UI/Sprites/EscudoPNG.png?fileID=21300000&guid=f5ec4793dce10954fb896be23042f51e&type=3#EscudoPNG");
+}
+
+.icon--health {
+    background-image: url("project://database/Assets/UI/Sprites/CorazonPNG.png?fileID=21300000&guid=bbdfe3bd26970634fb02eaa2ab70b852&type=3#CorazonPNG");
+}
+
+.money {
+    position: absolute;
+    left: 30px;
+    bottom: 40px;
+    width: 443px;
+    height: 247px;
+    background-image: url("project://database/Assets/UI/Sprites/MarcoDineroPNG.png?fileID=21300000&guid=457ca48d56c745a4cb29b7633c66ca47&type=3#MarcoDineroPNG");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.money-label {
+    position: absolute;
+    left: 45%;
+    right: 8%;
+    top: 30%;
+    bottom: 12%;
+    font-size: 72px;
+    color: rgb(60, 60, 60);
+    -unity-text-outline-width: 0;
+    -unity-text-align: middle-center;
+}
+
+.card-row {
+    position: absolute;
+    left: 480px;
+    right: 440px;
+    bottom: 30px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.unit-card {
+    width: 300px;
+    height: 170px;
+    margin: 0 10px;
+    background-image: url("project://database/Assets/UI/Sprites/MarcoMonoPNG.png?fileID=21300000&guid=7191836ad2b86654a80bbe5698ecf11e&type=3#MarcoMonoPNG");
+    -unity-background-scale-mode: scale-to-fit;
+    transition-property: scale, translate, opacity;
+    transition-duration: 0.15s;
+}
+
+.unit-card:hover {
+    translate: 0 -8px;
+}
+
+.unit-card--selected {
+    scale: 1.08 1.08;
+    translate: 0 -14px;
+    -unity-background-image-tint-color: rgb(255, 235, 150);
+}
+
+.unit-card--disabled {
+    opacity: 0.45;
+}
+
+.unit-card__price {
+    position: absolute;
+    top: -20%;
+    right: -5%;
+    flex-direction: row;
+    align-items: center;
+}
+
+.unit-card__price-label {
+    font-size: 40px;
+    margin-right: 0;
+    -unity-text-align: middle-right;
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/UI/Fonts/DarumadropOne.ttf?fileID=12800000&guid=6f2ddf5eaea5f994ab6f21341080f529&type=3#DarumadropOne");
+    -unity-text-outline-width: 3px;
+    -unity-font-style: bold;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    white-space: normal;
+    padding-bottom: 30%;
+}
+
+.unit-card__stats {
+    position: absolute;
+    left: 60%;
+    top: 10%;
+    right: 0%;
+}
+
+.unit-card__stat {
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+}
+
+.unit-card__stat-label {
+    font-size: 30px;
+    margin-left: 10px;
+    -unity-font-definition: url("project://database/Assets/UI/Fonts/DarumadropOne.ttf?fileID=12800000&guid=6f2ddf5eaea5f994ab6f21341080f529&type=3#DarumadropOne");
+    color: rgb(255, 255, 255);
+    -unity-text-outline-color: rgb(0, 0, 0);
+    -unity-text-outline-width: 3px;
+    -unity-font-style: bold;
+    padding-bottom: 50%;
+    padding-right: 0;
+}
+
+.unit-card__name {
+    position: absolute;
+    left: 20%;
+    right: 0;
+    bottom: -10%;
+    font-size: 36px;
+    letter-spacing: -2px;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 3px;
+    -unity-font-style: bold;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/UI/Fonts/DarumadropOne.ttf?fileID=12800000&guid=6f2ddf5eaea5f994ab6f21341080f529&type=3#DarumadropOne");
+}
+
+.fight-button {
+    position: absolute;
+    right: 40px;
+    bottom: 20px;
+    width: 397px;
+    height: 319px;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("project://database/Assets/UI/Sprites/FightButtonPNG.png?fileID=21300000&guid=758383535c433ee4c8216c63b02784d5&type=3#FightButtonPNG");
+    -unity-background-scale-mode: scale-to-fit;
+    transition-property: scale;
+    transition-duration: 0.15s;
+}
+
+.fight-button:hover {
+    scale: 1.06 1.06;
+}
+
+.fight-button:active {
+    scale: 0.96 0.96;
+}
+
+.fight-button:disabled {
+    opacity: 0.4;
+}
+
+.tooltip {
+    position: absolute;
+    width: 900px;
+    height: 600px;
+    display: none;
+    background-image: url("project://database/Assets/UI/Sprites/HoverMonoPNG.png?fileID=21300000&guid=9b35e0633ee938e4e85c412558b6c535&type=3#HoverMonoPNG");
+    -unity-background-scale-mode: scale-to-fit;
+    visibility: hidden;
+}
+
+.tooltip__text {
+    position: absolute;
+    left: 45%;
+    right: 0%;
+    top: 0%;
+    bottom: 20%;
+}
+
+.tooltip__name {
+    font-size: 52px;
+    margin-bottom: 6px;
+    -unity-font-style: bold;
+}
+
+.tooltip__description {
+    font-size: 38px;
+    white-space: normal;
+    -unity-text-outline-width: 0;
+    flex-grow: 1;
+    -unity-font-style: bold;
+}
+
+.tooltip__formation {
+    height: 20%;
+    width: auto;
+    -unity-background-scale-mode: scale-to-fit;
+    align-self: flex-start;
+    background-image: url("project://database/Assets/UI/Sprites/FormacionMonoPNG.png?fileID=2800000&guid=b544099f56a27a042a4c3af355b1a02e&type=3#FormacionMonoPNG");
+    background-position-x: center;
+    background-position-y: center;
+    aspect-ratio: 1;
+}

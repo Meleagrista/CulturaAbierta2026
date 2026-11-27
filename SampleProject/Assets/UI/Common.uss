@@ -82,19 +82,3 @@
 .arrow-button:disabled {
     opacity: 0.3;
 }
-
-.hud {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 24px 40px;
-}
-
-.hud-label {
-    font-size: 40px;
-    color: rgb(255, 255, 255);
-    -unity-font-style: bold;
-}

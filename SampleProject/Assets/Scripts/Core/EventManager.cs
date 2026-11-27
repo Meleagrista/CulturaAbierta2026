@@ -11,7 +11,7 @@ public enum Event
     GAME_LOSE_EVENT,
     GAME_PAUSE_EVENT,
     GAME_RESUME_EVENT,
-    PLAYER_MOVED_EVENT
+    FIGHT_STARTED_EVENT
 }
 
 public class EventManager : MonoBehaviour

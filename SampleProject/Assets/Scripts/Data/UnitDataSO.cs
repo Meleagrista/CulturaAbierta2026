@@ -20,6 +20,14 @@ public class UnitDataSO : ScriptableObject
 
     public float MovementSpeed;
 
+    [Header("HUD")]
+    [Tooltip("Card shown in the HUD (Marco* sprites).")]
+    public Sprite cardSprite;
+    [Tooltip("Speech bubble shown when hovering the card (Hover* sprites).")]
+    public Sprite hoverSprite;
+    [Tooltip("Footprint icon shown in the hover bubble (Formacion* sprites).")]
+    public Sprite formationSprite;
+
     public GameObject prefab;
 
     public bool Is2x2;
