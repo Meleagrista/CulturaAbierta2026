@@ -21,3 +21,7 @@ MonoBehaviour:
   Range: 1
   Price: 20
   MovementSpeed: 10
+  prefab: {fileID: 6991924251618387928, guid: 6fb78033f4894e59831e361a593edbbf, type: 3}
+  Is2x2: 0
+  footprint:
+  - {x: 0, y: 0}

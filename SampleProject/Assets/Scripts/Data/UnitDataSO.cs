@@ -24,5 +24,5 @@ public class UnitDataSO : ScriptableObject
 
     public bool Is2x2;
 
-    public List<Vector2> PositionList;
+    public List<Vector2Int> footprint;
 }
