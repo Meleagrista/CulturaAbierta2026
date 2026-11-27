@@ -53,10 +53,6 @@ public class UnitBehaviour : MonoBehaviour
     }
     void Update()
     {
-        if (currentState == UnitState.Moving)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, MovementSpeed * Time.deltaTime);
-        }
         if (currentState == UnitState.Attacking)
         {
             if (Time.time - timeOfLastAttack >= AttackRate)

@@ -31,6 +31,7 @@ public class UnitBunddle : MonoBehaviour
     private void Start()
     {
         unitList = new List<UnitBehaviour>();
+        deadUnit = new Queue<UnitBehaviour>();
         bundleMaxHealth = Data.MaxHealth;
         Price = Data.Price;
         Defense = Data.Defense;
@@ -44,7 +45,7 @@ public class UnitBunddle : MonoBehaviour
 
         for (int i = 0; i < NumberOfUnits; i++)
         {
-            // Usa la posición del spawner como base y suma 'i' en el eje X
+            // Usa la posiciï¿½n del spawner como base y suma 'i' en el eje X
             Vector3 spawnPos = transform.position + new Vector3(i * 1f, 0f, 0f);
             testPositions.Add(spawnPos);
         }
