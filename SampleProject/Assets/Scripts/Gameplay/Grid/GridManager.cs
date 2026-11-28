@@ -145,7 +145,7 @@ public class GridManager : MonoBehaviour
 
         UnitBunddle bundle = unitBunddleObject.GetComponent<UnitBunddle>();
 
-        bundle.SetUp(unit);
+        bundle.SetUp(unit,this);
 
         List<Vector3> unitPositions = new List<Vector3>();
 

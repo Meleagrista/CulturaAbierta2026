@@ -22,7 +22,10 @@ public class BaseCommanderBehaviour : MonoBehaviour
     {
         foreach(ModifierDataSO modifierData in positionModifiers)
         {
-            
+            foreach(Vector3 vector3 in tilesAffected)
+            {
+                gridManager.GetAt(gridManager.WorldToCell(vector3));
+            }
         }
 
         foreach(ModifierDataSO modifierData in selfModifiers)
