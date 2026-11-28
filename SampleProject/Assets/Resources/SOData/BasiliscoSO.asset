@@ -27,3 +27,6 @@ MonoBehaviour:
   prefab: {fileID: 1004113594294099194, guid: fab3f70e04f6ee548b73ce5e66416fcf, type: 3}
   footprint:
   - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  - {x: 1, y: 1}

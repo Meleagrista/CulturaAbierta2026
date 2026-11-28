@@ -25,12 +25,12 @@ MonoBehaviour:
   hoverSprite: {fileID: 21300000, guid: 5a0fccbf2886a314e880b1520c6213cc, type: 3}
   formationSprite: {fileID: 21300000, guid: 68a45aaea8616514bb837d6200d337f6, type: 3}
   prefab: {fileID: 1004113594294099194, guid: ba61c773f1a012247a56fb988914df64, type: 3}
-  footprint: []
-  abilityArea:
+  footprint:
   - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 1, y: 1}
+  - {x: 0, y: 1}
+  abilityArea: []
   abilityColor: {r: 0.88, g: 0.72, b: 0.35, a: 1}
   positionModifiers: []
   selfModifiers: []
