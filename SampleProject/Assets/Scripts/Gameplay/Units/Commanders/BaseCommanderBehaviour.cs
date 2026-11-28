@@ -12,10 +12,10 @@ public class BaseCommanderBehaviour : MonoBehaviour
 
     private void Start()
     {
-        CreateModifiers();
-
         bundle = GetComponent<UnitBunddle>();
         gridManager = bundle.gridManager;
+
+        CreateModifiers();
     }
 
     private void CreateModifiers()

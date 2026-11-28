@@ -24,12 +24,9 @@ MonoBehaviour:
   cardSprite: {fileID: 21300000, guid: 38fc0ff8a9d4fca49a94cd2d7c5f778d, type: 3}
   hoverSprite: {fileID: 21300000, guid: df62b6f391369d44da3835d7b8e8f34f, type: 3}
   formationSprite: {fileID: 21300000, guid: 901c6144ca2f5624287de94d1c577fd2, type: 3}
-  prefab: {fileID: 104040102905602182, guid: f9c79a2d89f50d84fb7584657104fcd8, type: 3}
-  Is2x2: 0
+  prefab: {fileID: 1004113594294099194, guid: 81de918272a9e5245affc798356f9bae, type: 3}
   footprint:
   - {x: 0, y: 0}
   - {x: 0, y: 1}
   - {x: 1, y: 0}
   - {x: 1, y: 1}
-  abilityArea: []
-  abilityColor: {r: 0.88, g: 0.72, b: 0.35, a: 1}

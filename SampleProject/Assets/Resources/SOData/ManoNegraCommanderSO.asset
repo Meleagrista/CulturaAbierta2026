@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07bbf3b77a38f374aaa95fbb36c89615, type: 3}
-  m_Name: ManoNegraSO
-  m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
+  m_Script: {fileID: 11500000, guid: d9a76abacb5ed274a91b4c0e38665a44, type: 3}
+  m_Name: ManoNegraCommanderSO
+  m_EditorClassIdentifier: Assembly-CSharp::CommanderDataSO
   Name: La Mano Negra
   Description: en que estrella estara el quijote
   MaxHealth: 800
@@ -24,14 +24,9 @@ MonoBehaviour:
   cardSprite: {fileID: 21300000, guid: e9e38cbb55f31df41a81ba70ab5cc298, type: 3}
   hoverSprite: {fileID: 21300000, guid: c2f81151a325fd94f87d1a0ef85d9758, type: 3}
   formationSprite: {fileID: 21300000, guid: 458a053449ead5f4ea6223d4003b3f04, type: 3}
-  prefab: {fileID: 7440160478945921215, guid: 2b590b68f15c0ae47a18314ad33a8ba2, type: 3}
-  Is2x2: 1
-  footprint:
-  - {x: 0, y: 0}
-  - {x: 1, y: 0}
-  - {x: 0, y: 1}
-  - {x: 1, y: 1}
-  abilityArea:
-  - {x: 1, y: 0}
-  - {x: 1, y: 1}
-  abilityColor: {r: 0.8867924, g: 0.69220626, b: 0.2300641, a: 1}
+  prefab: {fileID: 1004113594294099194, guid: 4045fa4d10cc6694b8ad7b199d0eaa5a, type: 3}
+  footprint: []
+  abilityArea: []
+  abilityColor: {r: 0.88, g: 0.72, b: 0.35, a: 1}
+  positionModifiers: []
+  selfModifiers: []

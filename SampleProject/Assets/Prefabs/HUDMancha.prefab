@@ -75,5 +75,5 @@ MonoBehaviour:
   tooltipTailX: 0.35
   roster:
   - {fileID: 11400000, guid: 77b97051c86359d4391615a5b1139c15, type: 2}
-  - {fileID: 11400000, guid: 4a613be1501dc8540bff3ab88417eccf, type: 2}
+  - {fileID: 11400000, guid: 0661f8a930aebdc4cb4a2b482ca9a687, type: 2}
   - {fileID: 11400000, guid: 37faa55000c4cb343ad3100b16502d65, type: 2}
