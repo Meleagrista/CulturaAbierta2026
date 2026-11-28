@@ -12,9 +12,23 @@ public class GridMesh : MonoBehaviour
     public bool showGridLines = true;
     public Color gridLineColor = new Color(1f, 1f, 1f, 0.35f);
 
+    // NUEVO
+    [Header("Shader visual")]
+    public Material gridMaterial;
+    public float heightOffset = 0.01f;
+
     static Material _mat;
 
     bool _fightStarted;
+
+    // NUEVO
+    Texture2D _stateTex;
+    Color32[] _states;
+    Material _matInstance;
+
+    // NUEVO: casillas ocupadas, con un id por unidad (para las de varias casillas)
+    Dictionary<Vector2Int, int> _occupied = new Dictionary<Vector2Int, int>();
+    int _nextId = 1;
 
     void Start()
     {
@@ -24,10 +38,24 @@ public class GridMesh : MonoBehaviour
             return;
         }
 
+        // NUEVO
+        if (grid != null && gridMaterial != null)
+        {
+            BuildQuad();
+            CreateStateTexture();
+        }
+
         EventManager.StartListening(Event.FIGHT_STARTED_EVENT, OnFightStarted);
     }
 
-    void OnDestroy() => EventManager.StopListening(Event.FIGHT_STARTED_EVENT, OnFightStarted);
+    void OnDestroy()
+    {
+        EventManager.StopListening(Event.FIGHT_STARTED_EVENT, OnFightStarted);
+
+        // NUEVO
+        if (_matInstance != null) Destroy(_matInstance);
+        if (_stateTex != null) Destroy(_stateTex);
+    }
 
     void OnFightStarted(Dictionary<string, object> message)
     {
@@ -97,8 +125,8 @@ public class GridMesh : MonoBehaviour
     void DrawHoverPreview()
     {
         bool canPlace = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
-        Color fill   = canPlace ? new Color(0f, 1f, 0f, 0.25f) : new Color(1f, 0f, 0f, 0.25f);
-        Color border = canPlace ? new Color(0f, 1f, 0f, 0.9f)  : new Color(1f, 0f, 0f, 0.9f);
+        Color fill = canPlace ? new Color(0f, 1f, 0f, 0.25f) : new Color(1f, 0f, 0f, 0.25f);
+        Color border = canPlace ? new Color(0f, 1f, 0f, 0.9f) : new Color(1f, 0f, 0f, 0.9f);
 
         foreach (var offset in selectedUnit.footprint)
         {
@@ -115,10 +143,10 @@ public class GridMesh : MonoBehaviour
     {
         GL.Begin(GL.QUADS);
         GL.Color(col);
-        GL.Vertex3(o.x,     o.y + 0.01f, o.z);
+        GL.Vertex3(o.x, o.y + 0.01f, o.z);
         GL.Vertex3(o.x + s, o.y + 0.01f, o.z);
         GL.Vertex3(o.x + s, o.y + 0.01f, o.z + s);
-        GL.Vertex3(o.x,     o.y + 0.01f, o.z + s);
+        GL.Vertex3(o.x, o.y + 0.01f, o.z + s);
         GL.End();
     }
 
@@ -126,13 +154,108 @@ public class GridMesh : MonoBehaviour
     {
         GL.Begin(GL.LINE_STRIP);
         GL.Color(col);
-        GL.Vertex3(o.x,     o.y + 0.01f, o.z);
+        GL.Vertex3(o.x, o.y + 0.01f, o.z);
         GL.Vertex3(o.x + s, o.y + 0.01f, o.z);
         GL.Vertex3(o.x + s, o.y + 0.01f, o.z + s);
-        GL.Vertex3(o.x,     o.y + 0.01f, o.z + s);
-        GL.Vertex3(o.x,     o.y + 0.01f, o.z);
+        GL.Vertex3(o.x, o.y + 0.01f, o.z + s);
+        GL.Vertex3(o.x, o.y + 0.01f, o.z);
         GL.End();
     }
+
+    // ---------------- NUEVO: visual con shader ----------------
+
+    void BuildQuad()
+    {
+        float w = grid.cols * grid.cellSize;
+        float d = grid.rows * grid.cellSize;
+
+        var mesh = new Mesh { name = "GridQuad" };
+        mesh.vertices = new[]
+        {
+            new Vector3(0, 0, 0), new Vector3(w, 0, 0),
+            new Vector3(w, 0, d), new Vector3(0, 0, d)
+        };
+        mesh.uv = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
+        mesh.triangles = new[] { 0, 2, 1, 0, 3, 2 };
+        mesh.RecalculateBounds();
+
+        var go = new GameObject("GridVisual");
+        go.layer = 0; // Default, para que el raycast del suelo no choque con el quad
+        go.transform.SetParent(transform, false);
+        go.transform.position = grid.transform.position + Vector3.up * heightOffset;
+
+        go.AddComponent<MeshFilter>().sharedMesh = mesh;
+        var mr = go.AddComponent<MeshRenderer>();
+        mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        mr.receiveShadows = false;
+
+        _matInstance = new Material(gridMaterial);
+        mr.sharedMaterial = _matInstance;
+    }
+
+    void CreateStateTexture()
+    {
+        _stateTex = new Texture2D(grid.cols, grid.rows, TextureFormat.RGBA32, false)
+        {
+            filterMode = FilterMode.Point,
+            wrapMode = TextureWrapMode.Clamp
+        };
+        _states = new Color32[grid.cols * grid.rows];
+
+        _matInstance.SetTexture("_StateTex", _stateTex);
+        _matInstance.SetVector("_GridSize", new Vector4(grid.cols, grid.rows, 0, 0));
+    }
+
+    void UpdateStates()
+    {
+        if (_stateTex == null) return;
+
+        // R = ocupada, G = hover válido, B = hover inválido
+        for (int i = 0; i < _states.Length; i++)
+            _states[i] = new Color32(0, 0, 0, 255);
+
+        // Casillas ocupadas
+        foreach (var kv in _occupied)
+        {
+            int idx = kv.Key.y * grid.cols + kv.Key.x;
+            _states[idx].r = 255;
+        }
+
+        if (_hasHit && selectedUnit != null)
+        {
+            bool ok = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
+
+            foreach (var off in selectedUnit.footprint)
+            {
+                Vector2Int c = _hoverCell + off;
+                if (!grid.InBounds(c)) continue;
+
+                int idx = c.y * grid.cols + c.x;
+                var px = _states[idx];
+                if (ok) px.g = 255; else px.b = 255;
+                _states[idx] = px;
+            }
+        }
+
+        _stateTex.SetPixels32(_states);
+        _stateTex.Apply(false);
+    }
+
+    // NUEVO: para que otros scripts lean el estado
+    public bool IsOccupiedCell(Vector2Int c) => _occupied.ContainsKey(c);
+    public bool HasHover => _hasHit;
+    public Vector2Int HoverCell => _hoverCell;
+    public bool HoverValid => _hasHit && selectedUnit != null && grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
+
+    public bool IsHoveredCell(Vector2Int c)
+    {
+        if (!_hasHit || selectedUnit == null) return false;
+        foreach (var off in selectedUnit.footprint)
+            if (_hoverCell + off == c) return true;
+        return false;
+    }
+
+    // ----------------------------------------------------------
 
     void Update()
     {
@@ -141,6 +264,7 @@ public class GridMesh : MonoBehaviour
         if (_fightStarted || BattleHUDController.IsPointerOverHUD(mousePos))
         {
             _hasHit = false;
+            UpdateStates(); // NUEVO
             return;
         }
 
@@ -148,6 +272,7 @@ public class GridMesh : MonoBehaviour
 
         if (!_hasHit)
         {
+            UpdateStates(); // NUEVO
             return;
         }
 
@@ -155,12 +280,37 @@ public class GridMesh : MonoBehaviour
 
         if (Mouse.current.leftButton.wasPressedThisFrame && selectedUnit != null)
         {
+            // NUEVO: detectar si la compra ha funcionado
+            bool couldPlace = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
+
             grid.TryBuy(selectedUnit, _hoverCell);
+
+            // Si antes se podía y ahora ya no, la compra funcionó
+            if (couldPlace && !grid.CanPlace(selectedUnit, _hoverCell))
+            {
+                int id = _nextId++;
+                foreach (var off in selectedUnit.footprint)
+                {
+                    Vector2Int c = _hoverCell + off;
+                    if (grid.InBounds(c)) _occupied[c] = id;
+                }
+            }
         }
 
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
             grid.Remove(_hoverCell);
+
+            // NUEVO
+            if (_occupied.TryGetValue(_hoverCell, out int removedId))
+            {
+                var toRemove = new List<Vector2Int>();
+                foreach (var kv in _occupied)
+                    if (kv.Value == removedId) toRemove.Add(kv.Key);
+                foreach (var k in toRemove) _occupied.Remove(k);
+            }
         }
+
+        UpdateStates(); // NUEVO
     }
 }
