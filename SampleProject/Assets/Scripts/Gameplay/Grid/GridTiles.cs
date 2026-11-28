@@ -4,33 +4,34 @@ public class GridTiles : MonoBehaviour
 {
     public GridManager grid;
     public GridMesh gridMesh;
-    public Material tileMaterial;      // material con el shader Custom/GridTileGlow
+    public Material tileMaterial;
 
     [Header("Forma")]
     public float tileHeight = 0.12f;
     public float gap = 0.04f;
 
     [Header("Colores")]
-    public Color validColor = new Color(0.55f, 0.72f, 0.45f, 1f); // verde salvia
-    public Color invalidColor = new Color(0.78f, 0.40f, 0.35f, 1f); // terracota
-    public Color occupiedColor = new Color(0.38f, 0.58f, 0.68f, 1f); // azul azulejo apagado
+    public Color validColor = new Color(0.55f, 0.72f, 0.45f, 1f);
+    public Color invalidColor = new Color(0.78f, 0.40f, 0.35f, 1f);
+    public Color occupiedColor = new Color(0.38f, 0.58f, 0.68f, 1f);
 
     [Header("Altura")]
     public float hoverRise = 0.07f;
     public float occupiedRise = 0.025f;
     public float neighborRise = 0.02f;
+    public float abilityRise = 0.02f;
 
     [Header("Suavizado")]
-    public float colorSpeed = 9f;     // velocidad de cambio de color
+    public float colorSpeed = 9f;    
     public float springStiffness = 300f;
-    public float springDamping = 28f;  // más bajo = más rebote
+    public float springDamping = 28f; 
 
     [Header("Vecinos del cursor")]
     public float neighborRadius = 2f;
     [Range(0, 1)] public float neighborGlow = 0.2f;
 
     [Header("Onda al colocar")]
-    public float waveSpeed = 6f;       // casillas por segundo
+    public float waveSpeed = 6f;      
     public float waveDuration = 0.8f;
     public float waveRise = 0.03f;
 
@@ -39,8 +40,8 @@ public class GridTiles : MonoBehaviour
     float[] _rise, _vel, _state;
     Color[] _color;
     bool[] _wasOccupied;
-    int[] _key;        // grupo visual de cada losa (0 = ninguno)
-    float[] _ext;      // 4 por losa: +x, -x, +z, -z (0..1 = unida)
+    int[] _key;      
+    float[] _ext;    
 
     MaterialPropertyBlock _mpb;
     Vector2Int _waveOrigin;
@@ -109,7 +110,7 @@ public class GridTiles : MonoBehaviour
 
         float colorK = 1f - Mathf.Exp(-colorSpeed * dt);
 
-        // 1) Detectar si se acaba de colocar algo para lanzar la onda
+        //Detectar si se acaba de colocar algo para lanzar la onda
         for (int z = 0; z < grid.rows; z++)
             for (int x = 0; x < grid.cols; x++)
             {
@@ -121,12 +122,16 @@ public class GridTiles : MonoBehaviour
                     _waveStart = t;
                 }
                 _wasOccupied[i] = occ;
-                _key[i] = gridMesh.IsHoveredCell(new Vector2Int(x, z)) ? 2 : (occ ? 1 : 0);
+                var cellPos = new Vector2Int(x, z);
+                bool hasAb = gridMesh.TryGetAbility(cellPos, out Color abKeyCol, out bool abKeyPrev);
+                _key[i] = gridMesh.IsHoveredCell(cellPos) ? 2
+                        : hasAb ? 3 + Mathf.Abs(abKeyCol.GetHashCode() % 1000)
+                        : occ ? 1 : 0;
             }
 
-        float waveT = (t - _waveStart) / waveDuration; // 0..1 mientras dura
+        float waveT = (t - _waveStart) / waveDuration;
 
-        // 2) Actualizar cada losa
+        //Actualizar cada losa
         for (int z = 0; z < grid.rows; z++)
             for (int x = 0; x < grid.cols; x++)
             {
@@ -135,7 +140,7 @@ public class GridTiles : MonoBehaviour
 
                 float targetState = 0f;
                 float targetRise = 0f;
-                Color targetCol = _color[i]; // si está en reposo, mantiene el color para apagarse suave
+                Color targetCol = _color[i];
 
                 bool occ = _wasOccupied[i];
                 bool hovered = gridMesh.IsHoveredCell(cell);
@@ -156,6 +161,14 @@ public class GridTiles : MonoBehaviour
                     targetRise = f * neighborRise;
                 }
 
+                //Área de habilidad (comandantes): se queda encendida tras soltar
+                if (gridMesh.TryGetAbility(cell, out Color abilityCol, out bool abilityPreview))
+                {
+                    targetCol = abilityCol;
+                    targetState = abilityPreview ? 0.8f : 0.5f + 0.07f * Mathf.Sin(t * 1.2f + (x + z) * 0.5f);
+                    targetRise = abilityPreview ? abilityRise * 1.5f : abilityRise;
+                }
+
                 if (hovered)
                 {
                     targetCol = hoverCol;
@@ -163,7 +176,7 @@ public class GridTiles : MonoBehaviour
                     targetRise = hoverRise;
                 }
 
-                // Onda al colocar
+                //Onda al colocar
                 float flash = 0f;
                 if (waveT >= 0f && waveT < 1f)
                 {
@@ -174,16 +187,16 @@ public class GridTiles : MonoBehaviour
                     targetRise += flash * waveRise;
                 }
 
-                // Suavizado de color y estado
+                //Suavizado de color y estado
                 _color[i] = Color.Lerp(_color[i], targetCol, colorK);
                 _state[i] = Mathf.Lerp(_state[i], targetState, colorK);
 
-                // Altura con muelle (pequeño rebote)
+                //Altura con muelle (pequeño rebote)
                 _vel[i] += (targetRise - _rise[i]) * springStiffness * dt;
                 _vel[i] *= Mathf.Exp(-springDamping * dt);
                 _rise[i] += _vel[i] * dt;
 
-                // Unión con vecinas del mismo grupo (se funden y solo queda el perímetro)
+                //Unión con vecinas del mismo grupo
                 int key = _key[i];
                 int bi = i * 4;
                 _ext[bi] = Mathf.Lerp(_ext[bi], (key != 0 && KeyAt(x + 1, z) == key) ? 1f : 0f, colorK);

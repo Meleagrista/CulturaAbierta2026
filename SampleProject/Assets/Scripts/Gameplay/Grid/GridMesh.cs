@@ -12,7 +12,6 @@ public class GridMesh : MonoBehaviour
     public bool showGridLines = true;
     public Color gridLineColor = new Color(1f, 1f, 1f, 0.35f);
 
-    // NUEVO
     [Header("Shader visual")]
     public Material gridMaterial;
     public float heightOffset = 0.01f;
@@ -21,14 +20,17 @@ public class GridMesh : MonoBehaviour
 
     bool _fightStarted;
 
-    // NUEVO
     Texture2D _stateTex;
     Color32[] _states;
     Material _matInstance;
 
-    // NUEVO: casillas ocupadas, con un id por unidad (para las de varias casillas)
     Dictionary<Vector2Int, int> _occupied = new Dictionary<Vector2Int, int>();
     int _nextId = 1;
+
+    struct PlacedInfo { public UnitDataSO unit; public Vector2Int origin; }
+    struct AbilityCell { public Color color; public bool preview; }
+    Dictionary<int, PlacedInfo> _placed = new Dictionary<int, PlacedInfo>();
+    Dictionary<Vector2Int, AbilityCell> _ability = new Dictionary<Vector2Int, AbilityCell>();
 
     void Start()
     {
@@ -38,7 +40,6 @@ public class GridMesh : MonoBehaviour
             return;
         }
 
-        // NUEVO
         if (grid != null && gridMaterial != null)
         {
             BuildQuad();
@@ -52,7 +53,6 @@ public class GridMesh : MonoBehaviour
     {
         EventManager.StopListening(Event.FIGHT_STARTED_EVENT, OnFightStarted);
 
-        // NUEVO
         if (_matInstance != null) Destroy(_matInstance);
         if (_stateTex != null) Destroy(_stateTex);
     }
@@ -162,8 +162,6 @@ public class GridMesh : MonoBehaviour
         GL.End();
     }
 
-    // ---------------- NUEVO: visual con shader ----------------
-
     void BuildQuad()
     {
         float w = grid.cols * grid.cellSize;
@@ -180,7 +178,7 @@ public class GridMesh : MonoBehaviour
         mesh.RecalculateBounds();
 
         var go = new GameObject("GridVisual");
-        go.layer = 0; // Default, para que el raycast del suelo no choque con el quad
+        go.layer = 0; 
         go.transform.SetParent(transform, false);
         go.transform.position = grid.transform.position + Vector3.up * heightOffset;
 
@@ -208,13 +206,13 @@ public class GridMesh : MonoBehaviour
 
     void UpdateStates()
     {
+        RefreshAbility(); 
+
         if (_stateTex == null) return;
 
-        // R = ocupada, G = hover válido, B = hover inválido
         for (int i = 0; i < _states.Length; i++)
             _states[i] = new Color32(0, 0, 0, 255);
 
-        // Casillas ocupadas
         foreach (var kv in _occupied)
         {
             int idx = kv.Key.y * grid.cols + kv.Key.x;
@@ -241,11 +239,51 @@ public class GridMesh : MonoBehaviour
         _stateTex.Apply(false);
     }
 
-    // NUEVO: para que otros scripts lean el estado
     public bool IsOccupiedCell(Vector2Int c) => _occupied.ContainsKey(c);
+
     public bool HasHover => _hasHit;
     public Vector2Int HoverCell => _hoverCell;
     public bool HoverValid => _hasHit && selectedUnit != null && grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
+
+    public bool TryGetAbility(Vector2Int c, out Color color, out bool preview)
+    {
+        if (_ability.TryGetValue(c, out var a))
+        {
+            color = a.color;
+            preview = a.preview;
+            return true;
+        }
+        color = default;
+        preview = false;
+        return false;
+    }
+
+    void RefreshAbility()
+    {
+        _ability.Clear();
+
+        foreach (var kv in _placed)
+        {
+            var u = kv.Value.unit;
+            if (u == null || u.abilityArea == null) continue;
+            foreach (var off in u.abilityArea)
+            {
+                Vector2Int c = kv.Value.origin + off;
+                if (!grid.InBounds(c)) continue;
+                _ability[c] = new AbilityCell { color = u.abilityColor, preview = false };
+            }
+        }
+
+        if (_hasHit && selectedUnit != null && selectedUnit.abilityArea != null)
+        {
+            foreach (var off in selectedUnit.abilityArea)
+            {
+                Vector2Int c = _hoverCell + off;
+                if (!grid.InBounds(c)) continue;
+                _ability[c] = new AbilityCell { color = selectedUnit.abilityColor, preview = true };
+            }
+        }
+    }
 
     public bool IsHoveredCell(Vector2Int c)
     {
@@ -255,8 +293,6 @@ public class GridMesh : MonoBehaviour
         return false;
     }
 
-    // ----------------------------------------------------------
-
     void Update()
     {
         Vector2 mousePos = Mouse.current.position.ReadValue();
@@ -264,7 +300,7 @@ public class GridMesh : MonoBehaviour
         if (_fightStarted || BattleHUDController.IsPointerOverHUD(mousePos))
         {
             _hasHit = false;
-            UpdateStates(); // NUEVO
+            UpdateStates();
             return;
         }
 
@@ -272,7 +308,7 @@ public class GridMesh : MonoBehaviour
 
         if (!_hasHit)
         {
-            UpdateStates(); // NUEVO
+            UpdateStates();
             return;
         }
 
@@ -280,15 +316,16 @@ public class GridMesh : MonoBehaviour
 
         if (Mouse.current.leftButton.wasPressedThisFrame && selectedUnit != null)
         {
-            // NUEVO: detectar si la compra ha funcionado
+            
             bool couldPlace = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
 
             grid.TryBuy(selectedUnit, _hoverCell);
 
-            // Si antes se podía y ahora ya no, la compra funcionó
+            
             if (couldPlace && !grid.CanPlace(selectedUnit, _hoverCell))
             {
                 int id = _nextId++;
+                _placed[id] = new PlacedInfo { unit = selectedUnit, origin = _hoverCell };
                 foreach (var off in selectedUnit.footprint)
                 {
                     Vector2Int c = _hoverCell + off;
@@ -301,16 +338,17 @@ public class GridMesh : MonoBehaviour
         {
             grid.Remove(_hoverCell);
 
-            // NUEVO
+            
             if (_occupied.TryGetValue(_hoverCell, out int removedId))
             {
                 var toRemove = new List<Vector2Int>();
                 foreach (var kv in _occupied)
                     if (kv.Value == removedId) toRemove.Add(kv.Key);
                 foreach (var k in toRemove) _occupied.Remove(k);
+                _placed.Remove(removedId);
             }
         }
 
-        UpdateStates(); // NUEVO
+        UpdateStates(); 
     }
 }

@@ -271,6 +271,7 @@ MonoBehaviour:
   hoverRise: 0.1
   occupiedRise: 0
   neighborRise: 0.05
+  abilityRise: 0.02
   colorSpeed: 12
   springStiffness: 300
   springDamping: 22
@@ -564,7 +565,7 @@ PrefabInstance:
     - target: {fileID: 3373939213016499355, guid: dbdcb9b2f2fcacd46951416829c0340c, type: 3}
       propertyPath: selectedUnit
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 11400000, guid: ed389dfcc0423cd4fab236b98e2cf40c, type: 2}
     - target: {fileID: 3697511849874106845, guid: dbdcb9b2f2fcacd46951416829c0340c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
