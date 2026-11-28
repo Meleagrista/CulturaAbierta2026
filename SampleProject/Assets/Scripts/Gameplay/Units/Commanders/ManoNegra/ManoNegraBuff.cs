@@ -8,6 +8,8 @@ public class ManoNegraBuff : Modifier
 
 
     private float BuffStartTime = -1;
+
+    private float LastHealTime = -1;
     public override void LoadParameters(ModifierDataSO modifierData)
     {
         ManoNegraModifierDataSO data = (ManoNegraModifierDataSO)modifierData;
@@ -26,10 +28,21 @@ public class ManoNegraBuff : Modifier
     {
         if(BuffStartTime != -1)
         {
-            if(BuffStartTime + Duration >= Time.time)
+            if(BuffStartTime + Duration <= Time.time)
             {
                 BuffStartTime = -1;
             }
+
+            if(LastHealTime + 1 <= Time.time)
+            {
+                LastHealTime = Time.time;
+                Bunddle.Heal(HealthPerSecond);
+            }
+        }
+
+        if(Bunddle.GetCurrentHealth() / Bunddle.GetMaxHealth() <= ActivationHealthPercentage)
+        {
+            ApplyModifier();
         }
     }
 }

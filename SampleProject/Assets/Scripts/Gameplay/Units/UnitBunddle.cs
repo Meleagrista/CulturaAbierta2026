@@ -103,6 +103,11 @@ public class UnitBunddle : MonoBehaviour
                 break;
             }
         }
+
+        if(currentHealth <= 0)
+        {
+            OnBundleDied?.Invoke(this);
+        }
     }
 
     public void Heal(float healing)
@@ -142,7 +147,9 @@ public class UnitBunddle : MonoBehaviour
         unitList.Remove(maxHitsUnit);
         unitsLeft--;
         deadUnit.Enqueue(maxHitsUnit);
+        OnMemberDied?.Invoke(maxHitsUnit);
         maxHitsUnit.gameObject.SetActive(false);
+
     }
 
     private void RespawnUnit(Vector3 position)
@@ -150,6 +157,8 @@ public class UnitBunddle : MonoBehaviour
         UnitBehaviour unit = deadUnit.Dequeue();
         unit.gameObject.SetActive(true);
         unit.Respawn(position);
+        OnMemberSpawned?.Invoke(unit);
+
     }
 
     public UnitBehaviour.Team GetTeam()
