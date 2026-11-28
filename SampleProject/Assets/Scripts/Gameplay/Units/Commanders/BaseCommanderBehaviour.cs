@@ -7,9 +7,15 @@ public class BaseCommanderBehaviour : MonoBehaviour
     [SerializeField] private List<ModifierDataSO> selfModifiers;
     [SerializeField] private List<Vector3> tilesAffected;
 
+    private UnitBunddle bundle;
+    private GridManager gridManager;
+
     private void Start()
     {
         CreateModifiers();
+
+        bundle = GetComponent<UnitBunddle>();
+        gridManager = bundle.gridManager;
     }
 
     private void CreateModifiers()

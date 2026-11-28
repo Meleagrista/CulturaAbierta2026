@@ -57,12 +57,16 @@ public class GridManager : MonoBehaviour
     [Header("Placed units")]
     [SerializeField] List<GridBundle> placedUnits = new List<GridBundle>();
 
+    private List<UnitBunddle> placedBunddles = new List<UnitBunddle>();
+
     GridUnit[,] _cells;
 
     public IReadOnlyList<GridBundle> PlacedUnits => placedUnits;
 
     public int Money => money;
     public event Action<int> OnMoneyChanged;
+
+    [SerializeField] GameObject UnitBundlePrefab;
 
     void Awake()
     {
@@ -137,12 +141,24 @@ public class GridManager : MonoBehaviour
             return false;
         }
 
+        GameObject unitBunddleObject = Instantiate(UnitBundlePrefab, CellCenterToWorld(origin), Quaternion.identity);
+
+        UnitBunddle bundle = unitBunddleObject.GetComponent<UnitBunddle>();
+
+        bundle.SetUp(unit);
+
+        List<Vector3> unitPositions = new List<Vector3>();
+
         var placed = new GridBundle { data = unit, origin = origin, paid = paid };
 
         foreach (var cells in GroupFootprint(unit, origin))
         {
+            foreach(Vector2Int cell in cells)
+            {
+                unitPositions.Add(CellCenterToWorld(cell));
+            }
+
             var gridUnit = new GridUnit { owner = placed, cells = cells };
-            gridUnit.instance = SpawnInstance(unit, cells);
             placed.units.Add(gridUnit);
 
             foreach (var cell in cells)
@@ -151,6 +167,8 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        bundle.SpawnUnits(unitPositions);
+        placedBunddles.Add(bundle);
         placedUnits.Add(placed);
         return true;
     }
@@ -221,7 +239,12 @@ public class GridManager : MonoBehaviour
             return;
         }
 
+        UnitBunddle placedBundle = GetAt(cell);
+
         var placed = gridUnit.owner;
+
+
+
         foreach (var unit in placed.units)
         {
             foreach (var c in unit.cells)
@@ -235,6 +258,8 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        Destroy(placedBundle.gameObject);
+        placedBunddles.Remove(placedBundle);
         placedUnits.Remove(placed);
 
         // Refunds what was paid (presets were free, so they give nothing back).
@@ -248,7 +273,22 @@ public class GridManager : MonoBehaviour
     public GridUnit GetUnitAt(Vector2Int cell) => InBounds(cell) ? _cells[cell.x, cell.y] : null;
 
     /// <summary>The whole bundle this tile belongs to.</summary>
-    public GridBundle GetAt(Vector2Int cell) => GetUnitAt(cell)?.owner;
+    public UnitBunddle GetAt(Vector2Int cell)
+    {
+        var gridUnit = _cells[cell.x, cell.y];
+        var placed = gridUnit.owner;
+        UnitBunddle placedBundle = null;
+        foreach (UnitBunddle bundle in placedBunddles)
+        {
+            if (placed.origin == WorldToCell(bundle.transform.position))
+            {
+                placedBundle = bundle;
+                return placedBundle;
+            }
+        }
+        return null;
+    }
+        
 
     public Vector2Int WorldToCell(Vector3 worldPos)
     {

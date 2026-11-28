@@ -546,6 +546,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2699208738814708846, guid: dbdcb9b2f2fcacd46951416829c0340c, type: 3}
+      propertyPath: UnitBundlePrefab
+      value: 
+      objectReference: {fileID: 5533588757422548188, guid: 8955d6efff27bb6459d4244b858fe010, type: 3}
+    - target: {fileID: 2699208738814708846, guid: dbdcb9b2f2fcacd46951416829c0340c, type: 3}
       propertyPath: presetUnits.Array.data[0].origin.x
       value: 2
       objectReference: {fileID: 0}
@@ -609,6 +613,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GridMap
       objectReference: {fileID: 0}
+    - target: {fileID: 6301706420045843387, guid: dbdcb9b2f2fcacd46951416829c0340c, type: 3}
+      propertyPath: UnitBundlePrefab
+      value: 
+      objectReference: {fileID: 5533588757422548188, guid: 8955d6efff27bb6459d4244b858fe010, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
