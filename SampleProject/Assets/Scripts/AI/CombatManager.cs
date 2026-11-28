@@ -12,13 +12,13 @@ public class CombatManager : WinCondition
 
     public bool HasStarted => bHasStarted;
     public bool HasEnded => bHasEnded;
-    [SerializeField] bool bDebug = false;
+    [SerializeField] bool debug = false;
     [SerializeField] float debugTimeScale = 4f;
 
     void Update()
     {
         // Solo en debug: arrancar con espacio sin pasar por el HUD.
-        if (bDebug && !bHasStarted && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (debug && !bHasStarted && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             StartCombat();
         }
@@ -28,7 +28,7 @@ public class CombatManager : WinCondition
     {
         if (bHasStarted) return;
 
-        if (bDebug) Time.timeScale = debugTimeScale;
+        if (debug) Time.timeScale = debugTimeScale;
 
         UnitBunddle[] bundles = FindObjectsByType<UnitBunddle>(FindObjectsSortMode.None);
 

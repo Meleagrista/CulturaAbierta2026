@@ -103,8 +103,12 @@ MonoBehaviour:
   cols: 10
   rows: 10
   cellSize: 1
+  isEnemy: 0
+  fallbackStartingMoney: 15
+  money: 0
   presetUnits: []
   placedUnits: []
+  UnitBundlePrefab: {fileID: 5533588757422548188, guid: 8955d6efff27bb6459d4244b858fe010, type: 3}
 --- !u!114 &5464024077983576935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,3 +128,5 @@ MonoBehaviour:
     m_Bits: 64
   showGridLines: 1
   gridLineColor: {r: 1, g: 1, b: 1, a: 0.35}
+  gridMaterial: {fileID: 0}
+  heightOffset: 0.01
