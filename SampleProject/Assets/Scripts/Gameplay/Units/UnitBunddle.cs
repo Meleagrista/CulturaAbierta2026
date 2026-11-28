@@ -30,8 +30,12 @@ public class UnitBunddle : MonoBehaviour
 
     private float currentHealth;
 
-    private void Start()
+    public GridManager gridManager;
+
+    public void SetUp(UnitDataSO data, GridManager gridManager)
     {
+        Data = data;
+
         unitList = new List<UnitBehaviour>();
         deadUnit = new Queue<UnitBehaviour>();
         bundleMaxHealth = Data.MaxHealth;
@@ -39,23 +43,9 @@ public class UnitBunddle : MonoBehaviour
         Defense = Data.Defense;
         UnitPrefab = Data.prefab;
         Damage = Data.AttackDamage;
-
+        this.gridManager = gridManager;
         currentHealth = bundleMaxHealth;
-
-        // --- PRUEBA DE SPAWN EN FILA ---
-        List<Vector3> testPositions = new List<Vector3>();
-
-        for (int i = 0; i < NumberOfUnits; i++)
-        {
-            // Usa la posici�n del spawner como base y suma 'i' en el eje X
-            Vector3 spawnPos = transform.position + new Vector3(i * 1f, 0f, 0f);
-            testPositions.Add(spawnPos);
-        }
-
-        SpawnUnits(testPositions);
     }
-
-
 
     public float GetPercentDamage()
     {
@@ -77,7 +67,7 @@ public class UnitBunddle : MonoBehaviour
 
     private void SpawnUnit(Vector3 position)
     {
-        GameObject unit = Instantiate(UnitPrefab, position, Quaternion.identity);
+        GameObject unit = Instantiate(UnitPrefab, position, Quaternion.identity,this.transform);
         UnitBehaviour unitbehaviour = unit.GetComponent<UnitBehaviour>();
         unitList.Add(unitbehaviour);
 
@@ -186,7 +176,4 @@ public class UnitBunddle : MonoBehaviour
     {
         return currentHealth;
     }
-
-
-
 }
