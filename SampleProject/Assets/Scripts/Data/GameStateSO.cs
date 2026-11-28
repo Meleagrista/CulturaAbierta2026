@@ -8,6 +8,7 @@ public class GameStateSO : SingletonScriptableObject<GameStateSO>
 {
     [SerializeField] private Side side;
     [SerializeField] private int tier;
+    [SerializeField] private int surplus = 0;
 
     public Side Side => side;
     public int Tier => tier;
@@ -28,4 +29,14 @@ public class GameStateSO : SingletonScriptableObject<GameStateSO>
     }
 
     public bool IsLastTier => tier >= LevelListSO.Instance.TierCount(side) - 1;
+
+    public void SetSurplus(int excess)
+    {
+        surplus = excess;
+    }
+
+    public int GetSurplus()
+    {
+        return surplus;
+    }
 }

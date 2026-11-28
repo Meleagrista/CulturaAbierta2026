@@ -74,7 +74,11 @@ public class GridManager : MonoBehaviour
         placedUnits.Clear();
 
         var level = LevelListSO.Instance.Find(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
-        SetMoney(isEnemy ? 0 : level?.startingMoney ?? fallbackStartingMoney);
+
+        int surplus = GameStateSO.Instance.GetSurplus();
+        int money = isEnemy ? 0 : level?.startingMoney ?? fallbackStartingMoney;
+
+        SetMoney(money + surplus);
     }
 
     void SetMoney(int value)
@@ -145,7 +149,7 @@ public class GridManager : MonoBehaviour
 
         UnitBunddle bundle = unitBunddleObject.GetComponent<UnitBunddle>();
 
-        bundle.SetUp(unit);
+        bundle.SetUp(unit,this);
 
         List<Vector3> unitPositions = new List<Vector3>();
 

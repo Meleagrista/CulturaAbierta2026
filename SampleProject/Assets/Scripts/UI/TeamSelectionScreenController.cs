@@ -39,11 +39,13 @@ public class TeamSelectionScreenController : UIScreen
 
     private void OnLeftClicked()
     {
+        GameStateSO.Instance.SetSurplus(0);
         LoadScene(GameStateSO.Instance.StartRun(Side.Left));
     }
 
     private void OnRightClicked()
     {
+        GameStateSO.Instance.SetSurplus(0);
         LoadScene(GameStateSO.Instance.StartRun(Side.Right));
     }
 }

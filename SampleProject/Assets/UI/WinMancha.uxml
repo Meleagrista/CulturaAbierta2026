@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/WinLoseScreen.uss?fileID=7433441132597879392&amp;guid=3af08abaa59b8dc4291f8243e6891fbb&amp;type=3#WinLoseScreen"/>
+    <ui:VisualElement class="screen overlay" style="width: 100%; height: 100%;">
+        <ui:Image enabled="true" picking-mode="Ignore" style="position: absolute; top: 10%; left: auto; right: auto; bottom: auto; align-self: center; width: 60%; height: 30%; -unity-background-scale-mode: scale-to-fit; background-image: url(&quot;project://database/Assets/UI/Sprites/VictoriaBannerPNG.png?fileID=2800000&amp;guid=87807c0e12e6ede4f884903909c0975e&amp;type=3#VictoriaBannerPNG&quot;); display: flex;"/>
+        <ui:Image style="left: 0%; bottom: 0; right: auto; width: 100%; height: 30%; top: auto; background-image: url(&quot;project://database/Assets/UI/Sprites/BocadilloPNG.png?fileID=2800000&amp;guid=21f91c2442eaeaf4ca08640348c29f63&amp;type=3#BocadilloPNG&quot;); background-repeat: no-repeat no-repeat; background-position-y: center; -unity-slice-type: sliced; scale: 1 -1; -unity-background-scale-mode: scale-to-fit; background-size: contain; position: absolute;">
+            <ui:Label name="message-label" text="Susss gritos son musssica para mis oídos…" style="bottom: 20%; top: auto; left: 35%; width: 40%; height: 50%; position: absolute; scale: 1 -1; -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/DarumadropOne.ttf?fileID=12800000&amp;guid=6f2ddf5eaea5f994ab6f21341080f529&amp;type=3#DarumadropOne&quot;); color: rgb(255, 255, 255); -unity-text-outline-color: rgb(0, 0, 0); -unity-text-outline-width: 3px; -unity-font-style: bold; -unity-text-align: upper-center; white-space: pre-wrap; font-size: 24px;"/>
+        </ui:Image>
+        <ui:Image class="mano-negra"/>
+        <ui:Button text="" name="next-button" class="win-lose-button" style="background-color: rgba(188, 188, 188, 0); background-image: url(&quot;project://database/Assets/UI/Sprites/SiguientePNG.png?fileID=2800000&amp;guid=02cf813795ac281448ddd5aec4238f32&amp;type=3#SiguientePNG&quot;); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 30%; height: 30%; top: 40%;"/>
+        <ui:Button text="- Volver al inicio - " name="home-button" class="win-lose-back" style="font-size: 42px; -unity-text-outline-width: 4px;"/>
+    </ui:VisualElement>
+</ui:UXML>

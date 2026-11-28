@@ -1,19 +1,31 @@
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 public class WinScreenController : UIScreen
 {
-    private Button m_menuButton;
+    [Tooltip("One line per difficulty tier: element 0 = first tier, 1 = second, 2 = third.")]
+    [TextArea(1, 3)]
+    [SerializeField] private List<string> messages = new List<string>();
+
+    private Button m_nextButton;
+    private Button m_homeButton;
+    private Label m_messageLabel;
 
     private void OnEnable()
     {
-        m_menuButton = Root.Q<Button>("menu-button");
-        m_menuButton.clicked += OnMenuClicked;
+        m_nextButton = Root.Q<Button>("next-button");
+        m_homeButton = Root.Q<Button>("home-button");
+        m_messageLabel = Root.Q<Label>("message-label");
+
+        m_nextButton.clicked += OnNextClicked;
+        m_homeButton.clicked += OnHomeClicked;
     }
 
     private void OnDisable()
     {
-        m_menuButton.clicked -= OnMenuClicked;
+        m_nextButton.clicked -= OnNextClicked;
+        m_homeButton.clicked -= OnHomeClicked;
     }
 
     private void Start()
@@ -26,14 +38,17 @@ public class WinScreenController : UIScreen
 
     private void OnGameWin(Dictionary<string, object> message)
     {
-        m_menuButton.text = GameStateSO.Instance.IsLastTier ? "Main menu" : "Next";
+        SetTierMessage(m_messageLabel, messages);
         Show();
     }
 
-    // Goes to a random level of the next difficulty tier, or back to the title when the run is complete.
-    private void OnMenuClicked()
+    // Random level from the next tier (back to the start if there is none).
+    // The WinLast screens hide this button in their UXML.
+    private void OnNextClicked()
     {
-        string next = GameStateSO.Instance.IsLastTier ? null : GameStateSO.Instance.AdvanceTier();
+        string next = GameStateSO.Instance.AdvanceTier();
         LoadScene(next ?? LevelListSO.Instance.titleScene);
     }
+
+    private void OnHomeClicked() => LoadScene(LevelListSO.Instance.titleScene);
 }
