@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 [CreateAssetMenu(menuName = "Modifiers/Modifier Data")]
-public class ModifierDataSO : MonoBehaviour
+public class ModifierDataSO : ScriptableObject
 {
     [SerializeField] private string modifierScriptName;
     public Type GetModifierType()

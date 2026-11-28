@@ -26,6 +26,8 @@ public class UnitBunddle : MonoBehaviour
     private float Defense;
     private float Damage;
 
+    private float DamageModifier;
+
     private float currentHealth;
 
     private void Start()
@@ -53,9 +55,11 @@ public class UnitBunddle : MonoBehaviour
         SpawnUnits(testPositions);
     }
 
+
+
     public float GetPercentDamage()
     {
-        return Damage / NumberOfUnits;
+        return (Damage + DamageModifier) / NumberOfUnits;
     }
 
     public void SpawnUnits(List<Vector3> UnitPositions)
@@ -64,6 +68,11 @@ public class UnitBunddle : MonoBehaviour
         {
             SpawnUnit(position);
         }
+    }
+
+    public void ModifyDamage(float DamageModifier)
+    {
+        this.DamageModifier = DamageModifier;
     }
 
     private void SpawnUnit(Vector3 position)
@@ -157,5 +166,16 @@ public class UnitBunddle : MonoBehaviour
     {
         return currentHealth > 0;
     }
+
+    public float GetMaxHealth()
+    {
+        return bundleMaxHealth;
+    }
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
+
 
 }

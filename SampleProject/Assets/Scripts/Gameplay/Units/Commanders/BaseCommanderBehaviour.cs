@@ -9,14 +9,14 @@ public class BaseCommanderBehaviour : MonoBehaviour
 
     private void Start()
     {
-        
+        CreateModifiers();
     }
 
     private void CreateModifiers()
     {
         foreach(ModifierDataSO modifierData in positionModifiers)
         {
-
+            
         }
 
         foreach(ModifierDataSO modifierData in selfModifiers)

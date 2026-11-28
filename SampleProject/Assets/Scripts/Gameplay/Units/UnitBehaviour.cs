@@ -22,8 +22,6 @@ public class UnitBehaviour : MonoBehaviour
     private string Name;
     private string Description;
 
-    private float AttackDamage;
-
     private float AttackRate;
 
     private float Range;
@@ -68,7 +66,6 @@ public class UnitBehaviour : MonoBehaviour
 
         Name = Data.Name;
         Description = Data.Description;
-        AttackDamage = bundle.GetPercentDamage();
         AttackRate = Data.AttackRate;
         Range = Data.Range;
         MovementSpeed = Data.MovementSpeed;
@@ -102,7 +99,7 @@ public class UnitBehaviour : MonoBehaviour
 
         if (currentTarget)
         {
-            currentTarget.Damage(AttackDamage);
+            currentTarget.Damage(bundle.GetPercentDamage());
         }
     }
 
