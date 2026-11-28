@@ -1,9 +1,15 @@
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class LoseScreenController : UIScreen
 {
+    [Tooltip("One line per difficulty tier: element 0 = first tier, 1 = second, 2 = third.")]
+    [TextArea(1, 3)]
+    [SerializeField] private List<string> messages = new List<string>();
+
+    private Label m_messageLabel;
     private Button m_retryButton;
     private Button m_homeButton;
 
@@ -11,6 +17,7 @@ public class LoseScreenController : UIScreen
     {
         m_retryButton = Root.Q<Button>("retry-button");
         m_homeButton = Root.Q<Button>("home-button");
+        m_messageLabel = Root.Q<Label>("message-label");
 
         m_retryButton.clicked += OnRetryClicked;
         m_homeButton.clicked += OnHomeClicked;
@@ -32,6 +39,7 @@ public class LoseScreenController : UIScreen
 
     private void OnGameLose(Dictionary<string, object> message)
     {
+        SetTierMessage(m_messageLabel, messages);
         Show();
     }
 

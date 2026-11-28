@@ -22,18 +22,20 @@
     border-left-width: 0;
     -unity-text-align: lower-center;
     -unity-font-definition: url("project://database/Assets/UI/Fonts/DarumadropOne.ttf?fileID=12800000&guid=6f2ddf5eaea5f994ab6f21341080f529&type=3#DarumadropOne");
-    color: rgb(255, 255, 255);
+    color: rgb(165, 165, 165);
     -unity-text-outline-width: 2.5px;
     -unity-text-outline-color: rgb(0, 0, 0);
     font-size: 52px;
     letter-spacing: -5px;
+    /* LuzPNG (the button's background image) is hidden by default and fades in on hover. */
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0);
     transition-duration: 0.2s;
-    transition-property: color, background-color;
+    transition-property: color, -unity-background-image-tint-color;
 }
 
 .team-selector-button:hover {
-    color: rgb(220, 30, 30);
-    background-color: rgba(0, 0, 0, 0.22);
+    color: rgb(255, 255, 255);
+    -unity-background-image-tint-color: rgba(255, 255, 255, 1);
 }
 
 #andalucia-half {
@@ -53,4 +55,14 @@
 
 .team-selector-button:hover Image {
     scale: 1.08 1.08;
+}
+
+/* La Mancha's button is mirrored (scale -1 on the button), so its image is flipped back here.
+   Keep this in the USS, not inline: an inline scale would block the hover growth. */
+#mancha-half Image {
+    scale: -1 1;
+}
+
+#mancha-half:hover Image {
+    scale: -1.08 1.08;
 }
