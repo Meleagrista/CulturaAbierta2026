@@ -24,7 +24,7 @@ MonoBehaviour:
   cardSprite: {fileID: 21300000, guid: 7339e21a870df89489ca5469feed2895, type: 3}
   hoverSprite: {fileID: 21300000, guid: 7cbdc675cc9f1b74e8d81dcf3809dc26, type: 3}
   formationSprite: {fileID: 21300000, guid: 6e76d4fefbce69b43a9fb3b753a5a8fe, type: 3}
-  prefab: {fileID: 1497058024533840533, guid: 4962347c12692534abe3bce8fd1246f9, type: 3}
+  prefab: {fileID: 1712362782130630829, guid: f8e05168c42792f4e9babd9d88df3720, type: 3}
   Is2x2: 0
   footprint:
   - {x: 0, y: 0}
