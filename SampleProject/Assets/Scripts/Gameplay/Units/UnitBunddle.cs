@@ -45,6 +45,15 @@ public class UnitBunddle : MonoBehaviour
         Damage = Data.AttackDamage;
         this.gridManager = gridManager;
         currentHealth = bundleMaxHealth;
+
+
+        if(data is CommanderDataSO comanderData)
+        {
+            BaseCommanderBehaviour commander = gameObject.AddComponent<BaseCommanderBehaviour>();
+            commander.tilesAffected = comanderData.abilityArea;
+            commander.selfModifiers = comanderData.selfModifiers;
+            commander.positionModifiers = comanderData.positionModifiers;
+        }
     }
 
     public float GetPercentDamage()

@@ -29,14 +29,5 @@ public class UnitDataSO : ScriptableObject
     public Sprite formationSprite;
 
     public GameObject prefab;
-
-    public bool Is2x2;
-
     public List<Vector2Int> footprint;
-
-    [Header("Ability area (opcional)")]
-    [Tooltip("Casillas afectadas por la habilidad, como offsets relativos a la casilla donde se suelta (igual que footprint). Vacío = sin área.")]
-    public List<Vector2Int> abilityArea;
-    [Tooltip("Color con el que se iluminan esas casillas.")]
-    public Color abilityColor = new Color(0.88f, 0.72f, 0.35f, 1f);
 }

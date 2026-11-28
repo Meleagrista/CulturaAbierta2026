@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 public class BaseCommanderBehaviour : MonoBehaviour
 {
-    [SerializeField] private List<ModifierDataSO> positionModifiers;
-    [SerializeField] private List<ModifierDataSO> selfModifiers;
-    [SerializeField] private List<Vector3> tilesAffected;
+    public List<ModifierDataSO> positionModifiers;
+    public List<ModifierDataSO> selfModifiers;
+    public List<Vector2Int> tilesAffected;
 
     private UnitBunddle bundle;
     private GridManager gridManager;
@@ -20,11 +20,19 @@ public class BaseCommanderBehaviour : MonoBehaviour
 
     private void CreateModifiers()
     {
+        Vector2Int vector = gridManager.WorldToCell(transform.position);
         foreach(ModifierDataSO modifierData in positionModifiers)
         {
-            foreach(Vector3 vector3 in tilesAffected)
+            foreach(Vector2Int vector2 in tilesAffected)
             {
-                gridManager.GetAt(gridManager.WorldToCell(vector3));
+                Vector2Int cell = vector + vector2;
+                UnitBunddle bundleat = gridManager.GetAt(cell);
+
+                if (bundleat)
+                {
+                    Modifier modifierComponent = (Modifier)bundleat.gameObject.AddComponent(modifierData.GetModifierType());
+                    modifierComponent.LoadParameters(modifierData);
+                }
             }
         }
 

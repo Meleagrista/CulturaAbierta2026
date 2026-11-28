@@ -28,5 +28,9 @@ MonoBehaviour:
   Is2x2: 1
   footprint:
   - {x: 0, y: 0}
-  abilityArea: []
+  abilityArea:
+  - {x: -1, y: -1}
+  - {x: -1, y: 2}
+  - {x: 2, y: 2}
+  - {x: 2, y: -1}
   abilityColor: {r: 0.88, g: 0.72, b: 0.35, a: 1}

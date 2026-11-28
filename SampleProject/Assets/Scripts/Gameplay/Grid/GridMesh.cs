@@ -261,28 +261,6 @@ public class GridMesh : MonoBehaviour
     void RefreshAbility()
     {
         _ability.Clear();
-
-        foreach (var kv in _placed)
-        {
-            var u = kv.Value.unit;
-            if (u == null || u.abilityArea == null) continue;
-            foreach (var off in u.abilityArea)
-            {
-                Vector2Int c = kv.Value.origin + off;
-                if (!grid.InBounds(c)) continue;
-                _ability[c] = new AbilityCell { color = u.abilityColor, preview = false };
-            }
-        }
-
-        if (_hasHit && selectedUnit != null && selectedUnit.abilityArea != null)
-        {
-            foreach (var off in selectedUnit.abilityArea)
-            {
-                Vector2Int c = _hoverCell + off;
-                if (!grid.InBounds(c)) continue;
-                _ability[c] = new AbilityCell { color = selectedUnit.abilityColor, preview = true };
-            }
-        }
     }
 
     public bool IsHoveredCell(Vector2Int c)

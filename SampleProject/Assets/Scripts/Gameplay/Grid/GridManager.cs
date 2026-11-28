@@ -181,7 +181,7 @@ public class GridManager : MonoBehaviour
     {
         var groups = new List<List<Vector2Int>>();
 
-        if (!unit.Is2x2)
+        if (unit is CommanderDataSO comanderData)
         {
             foreach (var offset in unit.footprint)
             {
