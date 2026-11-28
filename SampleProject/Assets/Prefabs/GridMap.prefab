@@ -1,5 +1,69 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1173718711887196930
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 475864090950574355}
+  - component: {fileID: 5330035814947890827}
+  m_Layer: 0
+  m_Name: GridTiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &475864090950574355
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173718711887196930}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -3.56585, y: -1, z: 10.31091}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3697511849874106845}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5330035814947890827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173718711887196930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 050edd6fbb05e2044b9d9c5fff1ea863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridTiles
+  grid: {fileID: 6301706420045843387}
+  gridMesh: {fileID: 3373939213016499355}
+  tileMaterial: {fileID: 2100000, guid: b0579fe54c2e23546a33a2f886a91847, type: 2}
+  tileHeight: 0.05
+  gap: 0.04
+  validColor: {r: 0.1, g: 1, b: 0.3, a: 1}
+  invalidColor: {r: 1, g: 0.15, b: 0.15, a: 1}
+  occupiedColor: {r: 1, g: 1, b: 1, a: 0}
+  hoverRise: 0.1
+  occupiedRise: 0
+  neighborRise: 0.05
+  abilityRise: 0.02
+  colorSpeed: 12
+  springStiffness: 300
+  springDamping: 22
+  neighborRadius: 2.5
+  neighborGlow: 0.35
+  waveSpeed: 7
+  waveDuration: 0.9
+  waveRise: 0.08
 --- !u!1 &3995601903713387023
 GameObject:
   m_ObjectHideFlags: 0
@@ -31,6 +95,7 @@ Transform:
   m_Children:
   - {fileID: 2924550136015327582}
   - {fileID: 6527891035359303307}
+  - {fileID: 475864090950574355}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1659316636491427881
@@ -46,8 +111,12 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: placedUnits.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
       propertyPath: presetUnits.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
       propertyPath: presetUnits.Array.data[0].data
@@ -127,6 +196,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3697511849874106845}
     m_Modifications:
+    - target: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: UnitBundlePrefab
+      value: 
+      objectReference: {fileID: 5533588757422548188, guid: 8955d6efff27bb6459d4244b858fe010, type: 3}
     - target: {fileID: 4580448252846154103, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -171,6 +244,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5464024077983576935, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: heightOffset
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464024077983576935, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: selectedUnit
+      value: 
+      objectReference: {fileID: 11400000, guid: 77b97051c86359d4391615a5b1139c15, type: 2}
+    - target: {fileID: 5464024077983576935, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+      propertyPath: showGridLines
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8274750668776988861, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
       propertyPath: m_Name
       value: GridLeft
@@ -180,6 +265,28 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+--- !u!114 &3373939213016499355 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5464024077983576935, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+  m_PrefabInstance: {fileID: 7279716015908878332}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5946f2e0a54042345a5d65a682dc8cff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridMesh
+--- !u!114 &6301706420045843387 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3635134685037329479, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}
+  m_PrefabInstance: {fileID: 7279716015908878332}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07e9beacace75664da8cf148ab0cb350, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Grid
 --- !u!4 &6527891035359303307 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4580448252846154103, guid: b95dfc2922825e84c85abcfb1cc82afb, type: 3}

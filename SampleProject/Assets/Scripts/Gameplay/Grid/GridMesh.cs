@@ -124,11 +124,11 @@ public class GridMesh : MonoBehaviour
 
     void DrawHoverPreview()
     {
-        bool canPlace = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
+        bool canPlace = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell, _rotation);
         Color fill = canPlace ? new Color(0f, 1f, 0f, 0.25f) : new Color(1f, 0f, 0f, 0.25f);
         Color border = canPlace ? new Color(0f, 1f, 0f, 0.9f) : new Color(1f, 0f, 0f, 0.9f);
 
-        foreach (var offset in selectedUnit.footprint)
+        foreach (var offset in CurrentFootprint)
         {
             Vector2Int c = _hoverCell + offset;
             if (!grid.InBounds(c)) continue;
@@ -221,9 +221,9 @@ public class GridMesh : MonoBehaviour
 
         if (_hasHit && selectedUnit != null)
         {
-            bool ok = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
+            bool ok = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell, _rotation);
 
-            foreach (var off in selectedUnit.footprint)
+            foreach (var off in CurrentFootprint)
             {
                 Vector2Int c = _hoverCell + off;
                 if (!grid.InBounds(c)) continue;
@@ -243,7 +243,7 @@ public class GridMesh : MonoBehaviour
 
     public bool HasHover => _hasHit;
     public Vector2Int HoverCell => _hoverCell;
-    public bool HoverValid => _hasHit && selectedUnit != null && grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
+    public bool HoverValid => _hasHit && selectedUnit != null && grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell, _rotation);
 
     public bool TryGetAbility(Vector2Int c, out Color color, out bool preview)
     {
@@ -266,7 +266,7 @@ public class GridMesh : MonoBehaviour
     public bool IsHoveredCell(Vector2Int c)
     {
         if (!_hasHit || selectedUnit == null) return false;
-        foreach (var off in selectedUnit.footprint)
+        foreach (var off in CurrentFootprint)
             if (_hoverCell + off == c) return true;
         return false;
     }
@@ -274,6 +274,11 @@ public class GridMesh : MonoBehaviour
     void Update()
     {
         Vector2 mousePos = Mouse.current.position.ReadValue();
+
+        if (!_fightStarted)
+        {
+            HandleRotationInput();
+        }
 
         if (_fightStarted || BattleHUDController.IsPointerOverHUD(mousePos))
         {
@@ -295,16 +300,16 @@ public class GridMesh : MonoBehaviour
         if (Mouse.current.leftButton.wasPressedThisFrame && selectedUnit != null)
         {
             
-            bool couldPlace = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell);
+            bool couldPlace = grid.CanAfford(selectedUnit) && grid.CanPlace(selectedUnit, _hoverCell, _rotation);
 
-            grid.TryBuy(selectedUnit, _hoverCell);
+            grid.TryBuy(selectedUnit, _hoverCell, _rotation);
 
             
-            if (couldPlace && !grid.CanPlace(selectedUnit, _hoverCell))
+            if (couldPlace && !grid.CanPlace(selectedUnit, _hoverCell, _rotation))
             {
                 int id = _nextId++;
                 _placed[id] = new PlacedInfo { unit = selectedUnit, origin = _hoverCell };
-                foreach (var off in selectedUnit.footprint)
+                foreach (var off in CurrentFootprint)
                 {
                     Vector2Int c = _hoverCell + off;
                     if (grid.InBounds(c)) _occupied[c] = id;
@@ -328,5 +333,52 @@ public class GridMesh : MonoBehaviour
         }
 
         UpdateStates(); 
+    }
+
+    // ---------- Rotation ----------
+    // R or the mouse wheel turns the selected unit 90°. Commanders ignore it (GridManager.RotationFor).
+    // The rotation resets to 0 whenever a different unit is selected.
+
+    int _rotation;
+    UnitDataSO _rotationUnit;
+
+    /// <summary>Current rotation in quarter turns (0-3), always 0 for commanders.</summary>
+    public int Rotation => GridManager.RotationFor(selectedUnit, _rotation);
+
+    /// <summary>Footprint of the selected unit with the current rotation applied.</summary>
+    List<Vector2Int> CurrentFootprint => grid.Footprint(selectedUnit, _rotation);
+
+    /// <summary>Turns the selected unit 90° (clockwise = true). Can be called from a HUD button.</summary>
+    public void Rotate(bool clockwise = true)
+    {
+        if (selectedUnit == null || selectedUnit is CommanderDataSO)
+        {
+            return;
+        }
+        _rotation = (_rotation + (clockwise ? 1 : 3)) % 4;
+    }
+
+    void HandleRotationInput()
+    {
+        if (selectedUnit != _rotationUnit)
+        {
+            _rotationUnit = selectedUnit;
+            _rotation = 0;
+        }
+
+        if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            Rotate(true);
+        }
+
+        float scroll = Mouse.current.scroll.ReadValue().y;
+        if (scroll > 0f)
+        {
+            Rotate(true);
+        }
+        else if (scroll < 0f)
+        {
+            Rotate(false);
+        }
     }
 }
