@@ -1,0 +1,100 @@
+:root {
+}
+
+.win-lose-button {
+    position: absolute;
+    top: 45%;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    align-self: center;
+    width: 28%;
+    height: 28%;
+    -unity-background-scale-mode: stretch-to-fill;
+    background-image: none;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.win-lose-label {
+    bottom: 20%;
+    top: auto;
+    left: 35%;
+    width: 40%;
+    height: 50%;
+    position: absolute;
+    scale: 1 -1;
+    -unity-font-definition: url("project://database/Assets/UI/Fonts/DarumadropOne.ttf?fileID=12800000&guid=6f2ddf5eaea5f994ab6f21341080f529&type=3#DarumadropOne");
+    color: rgb(255, 255, 255);
+    -unity-text-outline-color: rgb(0, 0, 0);
+    -unity-text-outline-width: 1px;
+    -unity-font-style: bold;
+    -unity-text-align: upper-center;
+    white-space: pre-wrap;
+}
+
+.mano-negra {
+    position: absolute;
+    bottom: -15%;
+    left: -5%;
+    width: 40%;
+    height: 60%;
+    background-image: url("project://database/Assets/UI/Sprites/ManoPNG.png?fileID=2800000&guid=f09d55b554296ef4996dc1e21ce282ba&type=3#ManoPNG");
+    -unity-background-scale-mode: stretch-to-fill;
+    background-position-y: top 0%;
+    -unity-slice-bottom: 0;
+    -unity-slice-top: 0;
+    -unity-slice-left: 0;
+    -unity-slice-scale: initial;
+    -unity-slice-type: sliced;
+    background-position-x: left 0%;
+    background-size: 100% 100%;
+    aspect-ratio: auto;
+    scale: -1 1;
+    transform-origin: 40%;
+    translate: 0 -10%;
+}
+
+.tragantia {
+    position: absolute;
+    bottom: -15%;
+    left: -5%;
+    width: 40%;
+    height: 60%;
+    background-image: url("project://database/Assets/UI/Sprites/TragantiaPNG.png?fileID=2800000&guid=33a4257a683fa9243b9b3fe901a9da7e&type=3#TragantiaPNG");
+    -unity-background-scale-mode: stretch-to-fill;
+    background-position-y: top 0%;
+    -unity-slice-bottom: 0;
+    -unity-slice-top: 0;
+    -unity-slice-left: 0;
+    -unity-slice-scale: initial;
+    -unity-slice-type: sliced;
+    background-position-x: left 0%;
+    background-size: 100% 100%;
+    aspect-ratio: auto;
+}
+
+.win-lose-back {
+    background-color: rgba(255, 255, 255, 0);
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    bottom: 0;
+    right: 0;
+    width: 25%;
+    height: 10%;
+    left: auto;
+    position: absolute;
+    -unity-font-definition: url("project://database/Assets/UI/Fonts/DarumadropOne.ttf?fileID=12800000&guid=6f2ddf5eaea5f994ab6f21341080f529&type=3#DarumadropOne");
+    font-size: 18px;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 2px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    -unity-font-style: bold;
+}
+
+

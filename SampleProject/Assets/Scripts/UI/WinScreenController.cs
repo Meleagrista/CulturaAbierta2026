@@ -3,17 +3,22 @@ using UnityEngine.UIElements;
 
 public class WinScreenController : UIScreen
 {
-    private Button m_menuButton;
+    private Button m_nextButton;
+    private Button m_homeButton;
 
     private void OnEnable()
     {
-        m_menuButton = Root.Q<Button>("menu-button");
-        m_menuButton.clicked += OnMenuClicked;
+        m_nextButton = Root.Q<Button>("next-button");
+        m_homeButton = Root.Q<Button>("home-button");
+
+        m_nextButton.clicked += OnNextClicked;
+        m_homeButton.clicked += OnHomeClicked;
     }
 
     private void OnDisable()
     {
-        m_menuButton.clicked -= OnMenuClicked;
+        m_nextButton.clicked -= OnNextClicked;
+        m_homeButton.clicked -= OnHomeClicked;
     }
 
     private void Start()
@@ -26,14 +31,17 @@ public class WinScreenController : UIScreen
 
     private void OnGameWin(Dictionary<string, object> message)
     {
-        m_menuButton.text = GameStateSO.Instance.IsLastTier ? "Main menu" : "Next";
+        // After the last tier there is no next level: only "back to start" is offered.
+        m_nextButton.style.display = GameStateSO.Instance.IsLastTier ? DisplayStyle.None : DisplayStyle.Flex;
         Show();
     }
 
-    // Goes to a random level of the next difficulty tier, or back to the title when the run is complete.
-    private void OnMenuClicked()
+    // Random level from the next difficulty tier.
+    private void OnNextClicked()
     {
-        string next = GameStateSO.Instance.IsLastTier ? null : GameStateSO.Instance.AdvanceTier();
+        string next = GameStateSO.Instance.AdvanceTier();
         LoadScene(next ?? LevelListSO.Instance.titleScene);
     }
+
+    private void OnHomeClicked() => LoadScene(LevelListSO.Instance.titleScene);
 }

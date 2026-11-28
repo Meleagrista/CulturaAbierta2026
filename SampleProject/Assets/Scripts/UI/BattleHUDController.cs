@@ -215,7 +215,11 @@ public class BattleHUDController : UIScreen
         Select(null);
         HideTooltip();
         m_fightButton.SetEnabled(false);
-        OnMoneyChanged(playerGrid != null ? playerGrid.Money : 0);
+
+        int moneyLeft = playerGrid != null ? playerGrid.Money : 0;
+
+        GameStateSO.Instance.SetSurplus(moneyLeft);
+        OnMoneyChanged(moneyLeft);
 
         EventManager.TriggerEvent(Event.FIGHT_STARTED_EVENT, null);
     }
