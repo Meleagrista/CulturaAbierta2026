@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CombatManager : MonoBehaviour
+public class CombatManager : WinCondition
 {
     List<UnitBunddle> playerBundles = new List<UnitBunddle>();
     List<UnitBunddle> enemyBundles = new List<UnitBunddle>();
@@ -12,11 +12,13 @@ public class CombatManager : MonoBehaviour
 
     public bool HasStarted => bHasStarted;
     public bool HasEnded => bHasEnded;
+    [SerializeField] bool bDebug = false;
+    [SerializeField] float debugTimeScale = 4f;
 
     void Update()
     {
-        // De momento el combate arranca con espacio. Cuando la UI tenga su boton, que llame a StartCombat().
-        if (!bHasStarted && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        // Solo en debug: arrancar con espacio sin pasar por el HUD.
+        if (bDebug && !bHasStarted && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             StartCombat();
         }
@@ -25,6 +27,8 @@ public class CombatManager : MonoBehaviour
     public void StartCombat()
     {
         if (bHasStarted) return;
+
+        if (bDebug) Time.timeScale = debugTimeScale;
 
         UnitBunddle[] bundles = FindObjectsByType<UnitBunddle>(FindObjectsSortMode.None);
 
@@ -77,18 +81,16 @@ public class CombatManager : MonoBehaviour
 
         bHasEnded = true;
 
-        // Puede pasar porque aquí ya se han calculado los golpes
-        if (bPlayerDead && bEnemyDead)
+        Time.timeScale = 1f;
+
+        // Puede haber empate, pero se considera como victoria para el jugador.
+        if (bEnemyDead)
         {
-            Debug.Log("[Combat] Tie");
-        }
-        else if (bEnemyDead)
-        {
-            Debug.Log("[Combat] Player Wins!");
+            DeclareWin();
         }
         else
         {
-            Debug.Log("[Combat] Enemy Wins!");
+            DeclareLose();
         }
     }
 
@@ -101,4 +103,17 @@ public class CombatManager : MonoBehaviour
 
         return true;
     }
+
+    protected override void OnEnable()
+    {
+        EventManager.StartListening(Event.FIGHT_STARTED_EVENT, OnFightStarted);
+    }
+
+    protected override void OnDisable()
+    {
+        EventManager.StopListening(Event.FIGHT_STARTED_EVENT, OnFightStarted);
+        Time.timeScale = 1f;
+    }
+
+    private void OnFightStarted(Dictionary<string, object> data) => StartCombat();
 }
