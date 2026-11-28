@@ -157,6 +157,8 @@ public class UnitBunddle : MonoBehaviour
         UnitBehaviour unit = deadUnit.Dequeue();
         unit.gameObject.SetActive(true);
         unit.Respawn(position);
+        unitList.Add(unit);
+        unitsLeft++;
         OnMemberSpawned?.Invoke(unit);
 
     }
